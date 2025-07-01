@@ -17,15 +17,15 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="index"
-        options={{ headerShown: true, title: "Home" }}
+        options={{ headerShown: false, title: "Home" }}
       />
       <Stack.Screen
-        name="auth"
-        options={{ headerShown: true, title: "auth" }}
+        name="(auth)"
+        options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="main"
-        options={{ headerShown: true, title: "main" }}
+        name="(main)"
+        options={{ headerShown: false }}
       />
       <Stack.Screen name="+not-found" />
     </Stack>

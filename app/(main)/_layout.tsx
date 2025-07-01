@@ -5,43 +5,43 @@ const RootLayout = () => {
     <Stack>
       <Stack.Screen
         name="home"
-        options={{ headerShown: true, title: "Home" }}
+        options={{ headerShown: false, title: "Home" }}
       />
       <Stack.Screen
         name="profile"
-        options={{ headerShown: true, title: "profile" }}
+        options={{ headerShown: false, title: "profile" }}
       />
       <Stack.Screen
         name="settings"
-        options={{ headerShown: true, title: "settings" }}
+        options={{ headerShown: false, title: "settings" }}
       />
       <Stack.Screen
         name="notifications"
-        options={{ headerShown: true, title: "notifications" }}
+        options={{ headerShown: false, title: "notifications" }}
       />
       <Stack.Screen
         name="chatbot"
-        options={{ headerShown: true, title: "chatbot" }}
+        options={{ headerShown: false, title: "chatbot" }}
       />
       <Stack.Screen
         name="dashboard"
-        options={{ headerShown: true, title: "dashboard" }}
+        options={{ headerShown: false, title: "dashboard" }}
       />
       <Stack.Screen
         name="food-scanner"
-        options={{ headerShown: true, title: "food-scanner" }}
+        options={{ headerShown: false, title: "food-scanner" }}
       />
       <Stack.Screen
         name="forum"
-        options={{ headerShown: true, title: "forum" }}
+        options={{ headerShown: false, title: "forum" }}
       />
       <Stack.Screen
         name="plans"
-        options={{ headerShown: true, title: "plans" }}
+        options={{ headerShown: false, title: "plans" }}
       />
       <Stack.Screen
         name="tracker"
-        options={{ headerShown: true, title: "tracker" }}
+        options={{ headerShown: false, title: "tracker" }}
       />
       <Stack.Screen name="+not-found" />
     </Stack>

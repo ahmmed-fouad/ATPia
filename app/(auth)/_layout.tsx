@@ -6,15 +6,15 @@ const Layout=()=> {
     <Stack>
       <Stack.Screen
         name="welcome"
-        options={{ headerShown: true, title: "Home" }}
+        options={{ headerShown: false, title: "Home" }}
       />
       <Stack.Screen
         name="login"
-        options={{ headerShown: true, title: "auth" }}
+        options={{ headerShown: false, title: "auth" }}
       />
       <Stack.Screen
         name="register"
-        options={{ headerShown: true, title: "main" }}
+        options={{ headerShown: false, title: "main" }}
       />
       <Stack.Screen name="+not-found" />
       <Stack.Screen name="forgot-password" />
