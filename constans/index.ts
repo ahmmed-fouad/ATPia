@@ -1,11 +1,13 @@
 import logo from "../assets/images/Logo_Image.png";
 import prog from "../assets/images/prog.jpeg";
 import getstarted from "../assets/images/started.jpg";
+import ATPiaLogo from "../assets/images/ATPia_Logo.png";
 
 export const images = {
     logo,
     prog,
-    getstarted
+    getstarted,
+    ATPiaLogo
 }
 
 export const onboarding =[

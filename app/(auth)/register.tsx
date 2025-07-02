@@ -81,7 +81,7 @@ const Register = () => {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="flex-1 px-6 py-8">
           {/* Header with Skip button */}
-          <View className="flex-row justify-between items-center mb-8">
+          <View className="flex-row justify-between items-center my-8">
             <TouchableOpacity onPress={() => router.back()}>
               <Text className="text-gray-500 text-lg">Back</Text>
             </TouchableOpacity>
@@ -93,7 +93,7 @@ const Register = () => {
           {/* Logo Section */}
           <View className="items-center mb-8">
             <Image 
-              source={images.logo} 
+              source={images.ATPiaLogo} 
               className="w-24 h-24 mb-4"
               resizeMode="contain"
             />

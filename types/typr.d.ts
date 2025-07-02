@@ -2,7 +2,7 @@ declare interface CustomBtnProps extends TouchableOpacityProps {
     onPress: () => void;
     title: string;
     bgVariant?: "primary" | "secondary" | "danger" | "success" | "outline" | "ghost";
-    textVariant?: "primary" | "secondary" | "danger" | "success" | "default";
+    textVariant?: "primary" | "secondary" | "danger" | "success" | "outline" | "default";
     IconLeft?: React.ComponentType<any>;
     IconRight?: React.ComponentType<any>;
     className?: string;

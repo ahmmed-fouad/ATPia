@@ -9,7 +9,7 @@ const getBgVariantStyle = (variant: CustomBtnProps["bgVariant"]) => {
         case "success":
             return "bg-green-500";
         case "outline":
-            return "bg-transparent border-neutral-300 border-[0.5px]";
+            return "bg-white border-gray-200 border-[1px] shadow-sm shadow-gray-200/50";
         case "ghost":
             return "bg-transparent";
         default:
@@ -27,6 +27,8 @@ const getTextVariantStyle = (variant: CustomBtnProps["textVariant"]) => {
             return "text-red-100";
         case "success":
             return "text-green-100";
+        case "outline":
+            return "text-gray-700";
         default:
             return "text-white";
     }
