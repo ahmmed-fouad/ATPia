@@ -147,8 +147,8 @@ const Login = () => {
                 className="mb-3 h-14"
               />
               <CustomBtn
-                title="Continue with Apple"
-                onPress={() => console.log('Apple login')}
+                title="Continue to Home"
+                onPress={() => router.replace('/')}
                 bgVariant="outline"
                 textVariant="outline"
                 className="h-14"
