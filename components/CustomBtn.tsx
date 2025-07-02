@@ -44,7 +44,7 @@ export const CustomBtn = ({
 }: CustomBtnProps) => (
   <TouchableOpacity onPress={onPress} 
   className={`flex flex-row items-center justify-center w-full h-12 rounded-full shadow-md shadow-neutral-400/70
-   ${getBgVariantStyle(bgVariant)} ${className}`}>
+   ${getBgVariantStyle(bgVariant)} ${className}`} {...props}>
     {IconLeft && <IconLeft />}
     <Text className={`font-bold text-lg ${getTextVariantStyle(textVariant)}`}>{title}</Text>
     {IconRight && <IconRight />}
