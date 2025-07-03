@@ -68,7 +68,7 @@ const Register = () => {
     if (validateForm()) {
       // Handle registration logic here
       console.log('Form data:', formData);
-      router.replace('/(main)/dashboard');
+      router.replace('/(auth)/login');
     }
   };
 

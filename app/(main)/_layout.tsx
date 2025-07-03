@@ -1,62 +1,22 @@
+import { CustomBottomBar } from '@/components';
 import { images } from '@/constans';
-import { Stack, Tabs } from "expo-router";
-import { Apple, Bell, BotMessageSquare, ChartNoAxesCombined, HomeIcon, Menu, Search, Settings, Users } from 'lucide-react-native';
+import { useMainNavigation } from '@/hooks';
+import { Bell, HomeIcon, Menu, Search, Settings } from 'lucide-react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const RootLayout = () => {
-  return (
-    <Stack>
-      <Stack.Screen
-        name="home"
-        options={{ headerShown: false, title: "Home" }}
-      />
-      <Stack.Screen
-        name="profile"
-        options={{ headerShown: false, title: "profile" }}
-      />
-      <Stack.Screen
-        name="settings"
-        options={{ headerShown: false, title: "settings" }}
-      />
-      <Stack.Screen
-        name="notifications"
-        options={{ headerShown: false, title: "notifications" }}
-      />
-      <Stack.Screen
-        name="chatbot"
-        options={{ headerShown: false, title: "chatbot" }}
-      />
-      <Stack.Screen
-        name="dashboard"
-        options={{ headerShown: false, title: "dashboard" }}
-      />
-      <Stack.Screen
-        name="food-scanner"
-        options={{ headerShown: false, title: "food-scanner" }}
-      />
-      <Stack.Screen
-        name="forum"
-        options={{ headerShown: false, title: "forum" }}
-      />
-      <Stack.Screen
-        name="plans"
-        options={{ headerShown: false, title: "plans" }}
-      />
-      <Stack.Screen
-        name="tracker"
-        options={{ headerShown: false, title: "tracker" }}
-      />
-      <Stack.Screen name="+not-found" />
-    </Stack>
-  );
-};
-
 const MainLayout = () => {
+  // Check if we're coming from login (you can add more sophisticated logic here)
+  const { activeTab, handleTabPress, renderScreen } = useMainNavigation('home');
+
+  // Check if we're on home screen
+  const isHomeScreen = activeTab === 'home';
+
+
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/*1st Top Bar */}
-
       {/* Logo & avatar*/}
       <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
         <View className="flex-row items-center">
@@ -81,8 +41,8 @@ const MainLayout = () => {
       <View className="flex-row items-center space-x-3 justify-between px-4  bg-white border-b border-gray-200">
         {/* Left Icons */}
         <View className="flex-row items-center space-x-3  py-3 gap-4">
-          <TouchableOpacity>
-            <HomeIcon size={25} color="#374151" />
+          <TouchableOpacity onPress={() => handleTabPress('home')}>
+            <HomeIcon size={25} color={isHomeScreen ? "#3b82f6" : "#374151"} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Bell size={25} color="#374151" />
@@ -110,60 +70,17 @@ const MainLayout = () => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* Bottom Tabs */}
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: "white",
-            borderTopWidth: 1,
-            borderTopColor: "#e5e7eb",
-            paddingBottom: 2,
-            paddingTop: 2,
-            height: 60,
-          },
-          tabBarActiveTintColor: "#3b82f6",
-          tabBarInactiveTintColor: "#6b7280",
-          tabBarLabelStyle: {
-            fontSize: 13,
-            fontWeight: '600',
-            marginTop: 2,
-          },
-        }}
-      >
-        <Tabs.Screen
-          name="home"
-          options={{
-            title: "AI",
-            tabBarIcon: ({ color, size }) => (
-              <BotMessageSquare size={24} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="tracking"
-          options={{
-            title: "Tracking",
-            tabBarIcon: ({ color, size }) => (
-              <ChartNoAxesCombined size={24} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="nutrition"
-          options={{
-            title: "Nutrition",
-            tabBarIcon: ({ color, size }) => <Apple size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="social"
-          options={{
-            title: "Social",
-            tabBarIcon: ({ color, size }) => <Users size={24} color={color} />,
-          }}
-        />
-      </Tabs>
+
+      {/* Screen Content */}
+      <View className="flex-1">
+        {renderScreen()}
+      </View>
+
+      {/* Custom Bottom Bar */}
+      <CustomBottomBar
+        activeTab={isHomeScreen ? "none" : activeTab}
+        onTabPress={handleTabPress}
+      />
     </SafeAreaView>
   );
 };

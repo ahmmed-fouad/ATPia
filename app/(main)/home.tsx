@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import {
     BookOpen,
     Calculator,
@@ -16,42 +15,42 @@ const Home = () => {
       title: 'Food Scanner',
       icon: Camera,
       color: 'bg-green-500',
-      route: '/(main)/food-scanner'
+      route: '/(main)/tracking'
     },
     {
       id: 2,
       title: 'Diet Calculator',
       icon: Calculator,
       color: 'bg-blue-500',
-      route: '/(main)/diet-calculator'
+      route: '/(main)/nutrition'
     },
     {
       id: 3,
       title: 'Meal Plans',
       icon: BookOpen,
       color: 'bg-purple-500',
-      route: '/(main)/meal-plans'
+      route: '/(main)/nutrition'
     },
     {
       id: 4,
       title: 'Progress Tracker',
       icon: Target,
       color: 'bg-orange-500',
-      route: '/(main)/tracker'
+      route: '/(main)/tracking'
     },
     {
       id: 5,
       title: 'Chatbot',
       icon: MessageCircle,
       color: 'bg-pink-500',
-      route: '/(main)/chatbot'
+      route: '/(main)/ai'
     },
     {
       id: 6,
       title: 'Forum',
       icon: Users,
       color: 'bg-indigo-500',
-      route: '/(main)/forum'
+      route: '/(main)/social'
     }
   ];
 
@@ -99,7 +98,7 @@ const Home = () => {
               <TouchableOpacity
                 key={action.id}
                 className="bg-white rounded-xl p-4 shadow-sm"
-                onPress={() => router.push(action.route)}
+                onPress={() => console.log(`Navigate to ${action.title}`)}
               >
                 <View className={`w-12 h-12 ${action.color} rounded-full items-center justify-center mb-3`}>
                   <action.icon size={24} color="white" />

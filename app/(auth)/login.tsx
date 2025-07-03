@@ -45,7 +45,7 @@ const Login = () => {
     if (validateForm()) {
       // Handle login logic here
       console.log('Login data:', formData);
-      router.replace('/(main)/dashboard');
+      router.replace('/(main)/home');
     }
   };
 
@@ -148,7 +148,7 @@ const Login = () => {
               />
               <CustomBtn
                 title="Continue to Home"
-                onPress={() => router.replace('/')}
+                onPress={() => router.replace('/(main)/home')}
                 bgVariant="outline"
                 textVariant="outline"
                 className="h-14"

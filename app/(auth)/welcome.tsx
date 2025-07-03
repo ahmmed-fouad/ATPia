@@ -10,10 +10,19 @@ const Onboarding = () => {
   const swiperRef = useRef<Swiper>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const isLastIndex = currentIndex === onboarding.length - 1;
+
+  const handleGetStarted = () => {
+    router.replace('/(auth)/register');
+  };
+
+  const handleSkip = () => {
+    router.replace('/(auth)/register');
+  };
+
   return (
     <SafeAreaView>
       <View className='flex h-full items-center justify-between bg-white'>
-        <TouchableOpacity className='w-full items-end justify-end p-5 flex' onPress={() => {router.replace('/(auth)/register')}}>
+        <TouchableOpacity className='w-full items-end justify-end p-5 flex' onPress={handleSkip}>
           <Text className='text-black text-xl font-bold'>Skip</Text>
         </TouchableOpacity>
         <Swiper ref={swiperRef} loop={false} 
@@ -31,7 +40,7 @@ const Onboarding = () => {
         <CustomBtn title={isLastIndex ? "Get Started" : "Next"} 
         onPress={() => {
           if (isLastIndex) {
-            router.replace('/(auth)/register');
+            handleGetStarted();
           } else {
             swiperRef.current?.scrollBy(1);
           }
