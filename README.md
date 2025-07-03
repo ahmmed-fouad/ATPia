@@ -1,3 +1,41 @@
+# ATPia - Health & Nutrition App
+
+A React Native app built with Expo Router and NativeWind for health tracking and nutrition management.
+
+## Features
+
+- **Authentication**: Welcome, Register, Login screens
+- **AI Chatbot**: Powered by OpenRouter API
+- **Health Tracking**: Progress tracking and analytics
+- **Nutrition**: Diet calculator and meal plans
+- **Social**: Community features and forums
+
+## Environment Setup
+
+### For AI Chatbot
+
+1. Get an API key from [OpenRouter](https://openrouter.ai/)
+2. Create a `.env` file in the root directory:
+   ```
+   EXPO_PUBLIC_OPENROUTER_API_KEY=your_api_key_here
+   ```
+3. Update the `HTTP-Referer` in `features/ai/services/streamApi.tsx` to your app's URL
+
+## Installation
+
+```bash
+npm install
+npm start
+```
+
+## Project Structure
+
+- `app/` - Expo Router screens and layouts
+- `components/` - Reusable UI components
+- `features/` - Feature-specific components and logic
+- `hooks/` - Custom React hooks
+- `shared/` - Shared utilities and data
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
