@@ -131,7 +131,7 @@ const Chatbot = () => {
             <View className=" rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 items-center justify-center mb-4">
               <Bot size={38} color="green" />
             </View>
-            <Text className="text-2xl font-bold text-gray-800 mb-2">
+            <Text className="text-2xl font-bold text-red-800 mb-2">
               Welcome to ATPia AI
             </Text>
             <Text className="text-gray-600 text-center text-base max-w-xs">
