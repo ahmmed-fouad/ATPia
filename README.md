@@ -5,7 +5,7 @@ A React Native app built with Expo Router and NativeWind for health tracking and
 ## Features
 
 - **Authentication**: Welcome, Register, Login screens
-- **AI Chatbot**: Powered by OpenRouter API
+- **AI Chatbot**: Powered by OpenRouter API with real-time streaming
 - **Health Tracking**: Progress tracking and analytics
 - **Nutrition**: Diet calculator and meal plans
 - **Social**: Community features and forums
@@ -20,6 +20,60 @@ A React Native app built with Expo Router and NativeWind for health tracking and
    EXPO_PUBLIC_OPENROUTER_API_KEY=your_api_key_here
    ```
 3. Update the `HTTP-Referer` in `features/ai/services/streamApi.tsx` to your app's URL
+
+### Android Emulator Recommendations
+
+For optimal streaming performance with OpenRouter.ai, we recommend:
+
+#### **Recommended Emulators:**
+- **Pixel 9** (API 34/35) - Best performance for streaming
+- **Pixel 8 Pro** (API 34) - Excellent compatibility
+- **Galaxy S24** (API 34) - Good performance
+- **Pixel 7a** (API 33) - Reliable streaming
+
+#### **Avoid These Emulators:**
+- **Pixel 5** (API 30) - May have streaming issues
+- **Older API versions** (API < 30) - Limited streaming support
+- **Low-end devices** - May struggle with real-time updates
+
+#### **Why These Recommendations:**
+1. **Better Network Stack**: Newer API versions have improved HTTP/2 and streaming support
+2. **Memory Management**: More RAM available for handling streaming connections
+3. **JavaScript Engine**: V8 improvements in newer Android versions
+4. **Fetch API**: Better native support for streaming responses
+
+### Implementation Details
+
+The AI chatbot uses a **fetch-based streaming approach** instead of Server-Sent Events (SSE) for better compatibility:
+
+#### **Key Features:**
+- ✅ **Native Fetch API**: Uses React Native's built-in fetch with ReadableStream
+- ✅ **AbortController**: Proper connection cleanup and cancellation
+- ✅ **TypeScript Support**: Full type safety with proper interfaces
+- ✅ **Error Handling**: Comprehensive error handling for network issues
+- ✅ **Memory Management**: Automatic cleanup of streaming connections
+- ✅ **Cross-Platform**: Works consistently on both Android and iOS
+
+#### **Technical Implementation:**
+```typescript
+// Uses native fetch with ReadableStream
+const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  method: "POST",
+  headers: { /* ... */ },
+  body: JSON.stringify({ /* ... */ }),
+  signal: abortController.signal, // For cancellation
+});
+
+const reader = response.body.getReader();
+// Process streaming data chunk by chunk
+```
+
+#### **Benefits Over SSE:**
+- 🔥 **Better Android Compatibility**: Works on all Android emulators
+- 🔥 **No External Dependencies**: Uses native APIs only
+- 🔥 **Better Error Handling**: More predictable error scenarios
+- 🔥 **Memory Efficient**: Automatic cleanup prevents memory leaks
+- 🔥 **TypeScript Support**: Full type safety throughout
 
 ## Installation
 

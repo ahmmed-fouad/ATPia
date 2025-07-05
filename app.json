@@ -8,6 +8,13 @@
     "scheme": "atpia",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "extra": {
+      "EXPO_PUBLIC_OPENROUTER_API_KEY": "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",
+      "router": {},
+      "eas": {
+        "projectId": "4518d24b-80ee-4623-97fa-d550e55d7d4f"
+      }
+    },
     "splash": {
       "image": "./assets/images/Logo_Image.png",
       "resizeMode": "contain",
@@ -21,7 +28,8 @@
         "foregroundImage": "./assets/images/ATPia_Logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.hamzaandomar.ATPia"
     },
     "web": {
       "bundler": "metro",
