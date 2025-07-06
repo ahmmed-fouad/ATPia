@@ -40,6 +40,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
 
   const currentChat = chats.find(chat => chat.id === (chatId || currentChatId));
 
+  // Debug logs
+  console.log('Current chat:', currentChat);
+  console.log('All chats:', chats);
+
+  // Ensure at least one chat exists
+  useEffect(() => {
+    if (chats.length === 0) {
+      const newChat = ChatService.createNewChat();
+      addChat(newChat);
+    }
+  }, [chats, addChat]);
+
   // Keyboard event listeners for dynamic adjustment
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {

@@ -14,6 +14,7 @@ export const useChatStore = create<ChatStore>()(
       error: null,
 
       addChat: (chat: Chat) => {
+        console.log('Adding chat:', chat);
         set((state) => ({
           chats: [chat, ...state.chats],
           currentChatId: chat.id,
@@ -21,6 +22,7 @@ export const useChatStore = create<ChatStore>()(
       },
 
       updateChat: (id: string, messages: Message[]) => {
+        console.log('Updating chat:', id, messages);
         set((state) => ({
           chats: state.chats.map((chat) =>
             chat.id === id
