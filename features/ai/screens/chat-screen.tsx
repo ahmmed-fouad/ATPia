@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   Keyboard,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -45,7 +44,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
       // Use keyboard height with a small reduction for better positioning
-      const reducedHeight = Math.max(0, e.endCoordinates.height - 100);
+      const reducedHeight = Math.max(0, e.endCoordinates.height - 80);
       setKeyboardHeight(reducedHeight);
       
       // Scroll to bottom when keyboard appears
@@ -147,13 +146,20 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
+    <View 
+     style={styles.container}
+     >
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={toggle} style={styles.menuButton}>
+      <View style={styles.header}
+      >
+        <TouchableOpacity
+          // className="bg-red-500"
+          onPress={toggle}
+          style={styles.menuButton}
+        >
           <Ionicons name="menu" size={24} color="#374151" />
         </TouchableOpacity>
-        
+
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle} numberOfLines={1}>
             {currentChat?.title || "New Chat"}
@@ -162,7 +168,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
             {currentChat?.messages.length || 0} messages
           </Text>
         </View>
-        
+
         <TouchableOpacity style={styles.newChatButton}>
           <Ionicons name="add" size={24} color="#3B82F6" />
         </TouchableOpacity>
@@ -198,7 +204,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
       <View style={{ paddingBottom: keyboardHeight }}>
         <ChatInput onSendMessage={handleSendMessage} disabled={isLoading} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -211,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
     backgroundColor: '#FFFFFF',

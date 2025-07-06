@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Dimensions, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { ChatDrawer } from '../../../features/ai/components/drawer/ChatDrawer';
 import { ChatScreen } from '../../../features/ai/screens/chat-screen';
 import { useChatStore } from '../../../features/ai/stores/chatStore';
@@ -39,7 +38,7 @@ export default function AIScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ChatDrawer
         onNewChat={handleNewChat}
         onSelectChat={handleSelectChat}
@@ -50,7 +49,7 @@ export default function AIScreen() {
       <ChatScreen
         chatId={currentChatId || undefined}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
