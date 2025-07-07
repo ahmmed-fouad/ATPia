@@ -2,16 +2,20 @@ import { useRouter } from 'expo-router';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { ChatDrawer } from '../../../features/ai/components/drawer/ChatDrawer';
 import { ChatScreen } from '../../../features/ai/screens/chat-screen';
+import { ChatService } from '../../../features/ai/services/chatService';
 import { useChatStore } from '../../../features/ai/stores/chatStore';
 
 const { width } = Dimensions.get('window');
 
 export default function AIScreen() {
   const router = useRouter();
-  const { currentChatId } = useChatStore();
+  const { currentChatId, addChat } = useChatStore();
 
   const handleNewChat = () => {
     // Create new chat logic here
+    const newChat = ChatService.createNewChat();
+    addChat(newChat);
+    router.push(`/ai/chat/${newChat.id}`);
   };
 
   const handleSelectChat = (chatId: string) => {

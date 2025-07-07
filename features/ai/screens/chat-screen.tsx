@@ -40,9 +40,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
 
   const currentChat = chats.find(chat => chat.id === (chatId || currentChatId));
 
-  // Debug logs
-  console.log('Current chat:', currentChat);
-  console.log('All chats:', chats);
+
 
   // Ensure at least one chat exists
   useEffect(() => {
