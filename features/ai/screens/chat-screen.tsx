@@ -13,7 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatInput, ChatMessage } from '../components/chat';
 import { useDrawer } from '../hooks/useDrawer';
-import { ChatService } from '../services/chatService';
+import { ChatService, streamChat } from '../services';
 import { useChatStore } from '../stores/chatStore';
 
 interface ChatScreenProps {
@@ -26,6 +26,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   const flatListRef = useRef<FlatList>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [aiResponse, setAiResponse] = useState<string>("");
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [cleanupFunction, setCleanupFunction] = useState<(() => void) | null>(null);
 
   const {
     chats,
@@ -38,14 +41,22 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   } = useChatStore();
 
   const { toggle, close } = useDrawer();
+  
   // Close the drawer whenever chatId changes
   useEffect(() => {
     close();
   }, [chatId, close]);
 
+  // Cleanup effect for streaming connections
+  useEffect(() => {
+    return () => {
+      if (cleanupFunction) {
+        cleanupFunction();
+      }
+    };
+  }, [cleanupFunction]);
+
   const currentChat = chats.find(chat => chat.id === (chatId || currentChatId));
-
-
 
   // Ensure at least one chat exists
   useEffect(() => {
@@ -109,7 +120,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   const handleSendMessage = async (messageText: string) => {
     if (!currentChat) return;
 
+    // Clean up any existing connection
+    if (cleanupFunction) {
+      cleanupFunction();
+      setCleanupFunction(null);
+    }
+
     setIsLoading(true);
+    setAiResponse("");
+    setHasError(false);
 
     try {
       // Add user message
@@ -122,12 +141,30 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
         updateChatWithTitle(currentChat.id, titledChat.messages, titledChat.title);
       }
 
-      // Simulate AI response
-      const aiResponse = await ChatService.sendMessageToAI(messageText);
-      const finalChat = ChatService.addMessage(updatedChat, aiResponse, false);
-      updateChat(currentChat.id, finalChat.messages);
+      let responseText = "";
+
+      // Use real streaming API
+      const cleanup = await streamChat(messageText, (chunk: string) => {
+        responseText += chunk;
+        
+        // Update the chat with streaming content
+        const chatWithStreamingAi = ChatService.addMessage(updatedChat, responseText, false);
+        updateChat(currentChat.id, chatWithStreamingAi.messages);
+      });
+
+      setCleanupFunction(() => cleanup);
+
+      // Final update with complete response
+      if (responseText.trim()) {
+        const finalChat = ChatService.addMessage(updatedChat, responseText.trim(), false);
+        updateChat(currentChat.id, finalChat.messages);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
+      setHasError(true);
+      // Add error message to chat
+      const errorChat = ChatService.addMessage(currentChat, "Sorry, I encountered an error. Please try again.", false);
+      updateChat(currentChat.id, errorChat.messages);
     } finally {
       setIsLoading(false);
     }

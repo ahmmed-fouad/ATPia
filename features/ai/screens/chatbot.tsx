@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Bot, Send, Sparkles, User } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { streamChat } from "../services/streamApiNew";
+import { streamChat } from "../services/streamApi";
 
 interface Message {
   id: string;
