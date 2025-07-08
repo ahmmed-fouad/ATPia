@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDrawer } from '../../hooks/useDrawer';
 import { ChatService } from '../../services/chatService';
 import { useDrawerAnimation } from '../../utils/animations';
@@ -81,7 +82,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
         style={[styles.drawer, drawerStyle]}
         pointerEvents={isOpen ? 'auto' : 'none'}
       >
-        <View style={styles.drawerContent}>
+        <SafeAreaView style={styles.drawerContent}>
           <DrawerHeader
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
@@ -106,7 +107,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
             onProfilePress={onProfilePress}
             onSettingsPress={onSettingsPress}
           />
-        </View>
+        </SafeAreaView>
       </Animated.View>
     </View>
   );
