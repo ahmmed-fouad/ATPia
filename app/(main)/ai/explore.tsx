@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { ChatDrawer } from '../../../features/ai/components/drawer/ChatDrawer';
 import { ExploreScreen } from '../../../features/ai/screens/explore-screen';
 
 export default function ExploreRoute() {
@@ -35,13 +34,6 @@ export default function ExploreRoute() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ChatDrawer
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        onSelectSection={handleSelectSection}
-        onProfilePress={handleProfilePress}
-        onSettingsPress={handleSettingsPress}
-      />
       <ExploreScreen />
     </SafeAreaView>
   );

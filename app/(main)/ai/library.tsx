@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { ChatDrawer } from '../../../features/ai/components/drawer/ChatDrawer';
 import { LibraryScreen } from '../../../features/ai/screens/library-screen';
 
 export default function LibraryRoute() {
@@ -35,13 +34,6 @@ export default function LibraryRoute() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ChatDrawer
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        onSelectSection={handleSelectSection}
-        onProfilePress={handleProfilePress}
-        onSettingsPress={handleSettingsPress}
-      />
       <LibraryScreen />
     </SafeAreaView>
   );

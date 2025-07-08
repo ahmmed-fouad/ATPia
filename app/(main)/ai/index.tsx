@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { ChatDrawer } from '../../../features/ai/components/drawer/ChatDrawer';
 import { ChatScreen } from '../../../features/ai/screens/chat-screen';
 import { ChatService } from '../../../features/ai/services/chatService';
 import { useChatStore } from '../../../features/ai/stores/chatStore';
@@ -15,11 +14,11 @@ export default function AIScreen() {
     // Create new chat logic here
     const newChat = ChatService.createNewChat();
     addChat(newChat);
-    router.push(`/ai/chat/${newChat.id}`);
+    router.push(`/ai/(chat)/${newChat.id}`);
   };
 
   const handleSelectChat = (chatId: string) => {
-    router.push(`/ai/chat/${chatId}`);
+    router.push(`/ai/(chat)/${chatId}`);
   };
 
   const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
@@ -43,13 +42,6 @@ export default function AIScreen() {
 
   return (
     <View style={styles.container}>
-      <ChatDrawer
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        onSelectSection={handleSelectSection}
-        onProfilePress={handleProfilePress}
-        onSettingsPress={handleSettingsPress}
-      />
       <ChatScreen
         chatId={currentChatId || undefined}
       />

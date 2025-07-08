@@ -36,7 +36,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
     clearCurrentChat,
   } = useChatStore();
 
-  const { toggle } = useDrawer();
+  const { toggle, close } = useDrawer();
+  // Close the drawer whenever chatId changes
+  useEffect(() => {
+    close();
+  }, [chatId, close]);
 
   const currentChat = chats.find(chat => chat.id === (chatId || currentChatId));
 

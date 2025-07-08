@@ -18,7 +18,6 @@ const Chatbot = () => {
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [hasError, setHasError] = useState<boolean>(false);
     const [cleanupFunction, setCleanupFunction] = useState<(() => void) | null>(null);
-    // console.log(aiResponse);
     useEffect(() => {
         const loadPrefill = async () => {
             try {

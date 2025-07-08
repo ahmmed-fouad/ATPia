@@ -63,19 +63,19 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
 
   const chatHistory = filteredChats.map(ChatService.getChatHistoryItem);
 
-  if (!isOpen) return null;
-
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents={isOpen ? 'auto' : 'none'}>
       {/* Overlay */}
       <Animated.View
         style={[styles.overlay, overlayStyle]}
         onTouchEnd={handleClose}
+        pointerEvents={isOpen ? 'auto' : 'none'}
       />
 
       {/* Drawer */}
       <Animated.View
         style={[styles.drawer, drawerStyle]}
+        pointerEvents={isOpen ? 'auto' : 'none'}
       >
         <View style={styles.drawerContent}>
           <DrawerHeader

@@ -12,14 +12,19 @@ export const useDrawerStore = create<DrawerStore>()(
       isHistoryExpanded: true,
 
       toggle: () => {
-        set((state) => ({ isOpen: !state.isOpen }));
+        set((state) => {
+          console.log('Toggling drawer. Was open:', state.isOpen);
+          return { isOpen: !state.isOpen };
+        });
       },
 
       open: () => {
+        console.log('Opening drawer');
         set({ isOpen: true });
       },
 
       close: () => {
+        console.log('Closing drawer');
         set({ isOpen: false });
       },
 

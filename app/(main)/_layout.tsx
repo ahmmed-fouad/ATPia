@@ -1,18 +1,50 @@
 import { CustomBottomBar } from '@/components';
 import { images } from '@/constans';
-import { useMainNavigation } from '@/hooks';
+import { ChatDrawer } from '@/features/ai/components/drawer/ChatDrawer';
+import { ChatService } from '@/features/ai/services/chatService';
+import { useChatStore } from '@/features/ai/stores/chatStore';
+import { Slot, usePathname, useRouter } from 'expo-router';
 import { Bell, HomeIcon, Menu, Search, Settings } from 'lucide-react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MainLayout = () => {
-  // Check if we're coming from login (you can add more sophisticated logic here)
-  const { activeTab, handleTabPress, renderScreen } = useMainNavigation('home');
+  const router = useRouter();
+  const pathname = usePathname();
+  const addChat = useChatStore((state) => state.addChat);
 
-  // Check if we're on home screen
+  // Determine active tab based on current route
+  const getActiveTab = () => {
+    if (pathname.includes('/ai')) return 'ai';
+    if (pathname.includes('/tracking')) return 'tracking';
+    if (pathname.includes('/nutrition')) return 'nutrition';
+    if (pathname.includes('/social')) return 'social';
+    if (pathname.includes('/home')) return 'home';
+    return 'ai'; // default
+  };
+
+  const activeTab = getActiveTab();
   const isHomeScreen = activeTab === 'home';
 
+  const handleTabPress = (tabName: 'ai' | 'tracking' | 'nutrition' | 'social' | 'home') => {
+    router.push(`/(main)/${tabName}`);
+  };
 
+  // Drawer navigation handlers
+  const handleNewChat = () => {
+    const newChat = ChatService.createNewChat();
+    addChat(newChat);
+    router.push(`/ai/(chat)/${newChat.id}`);
+  };
+
+  const handleSelectChat = (chatId: string) => {
+    router.push(`/ai/(chat)/${chatId}`);
+  };
+
+  const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
+    if (section === 'library') router.push('/ai/library');
+    else if (section === 'explore') router.push('/ai/explore');
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -71,10 +103,19 @@ const MainLayout = () => {
         </View>
       </View>
 
-      {/* Screen Content */}
+      {/* Screen Content - Expo Router handles this automatically */}
       <View className="flex-1">
-        {renderScreen()}
+        <Slot />
       </View>
+
+      {/* Chat Drawer as a global portal */}
+      <ChatDrawer
+        onNewChat={handleNewChat}
+        onSelectChat={handleSelectChat}
+        onSelectSection={handleSelectSection}
+        onProfilePress={() => {}}
+        onSettingsPress={() => {}}
+      />
 
       {/* Custom Bottom Bar */}
       <CustomBottomBar
