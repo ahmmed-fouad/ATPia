@@ -12,6 +12,7 @@ export const DrawerBody: React.FC<DrawerBodyProps> = ({
   onSelectChat,
   onSelectSection,
   onToggleHistory,
+  onDeleteChat,
 }) => {
   const renderSectionItem = (
     icon: string,
@@ -94,6 +95,7 @@ export const DrawerBody: React.FC<DrawerBodyProps> = ({
                   item={item}
                   isSelected={false}
                   onPress={onSelectChat}
+                  onDelete={onDeleteChat}
                 />
               ))
             )}

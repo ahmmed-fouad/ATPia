@@ -9,6 +9,7 @@ interface ChatHistoryItemProps {
   isSelected: boolean;
   onPress: (chatId: string) => void;
   onLongPress?: (chatId: string) => void;
+  onDelete?: (chatId: string) => void;
 }
 
 export const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({
@@ -16,9 +17,11 @@ export const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({
   isSelected,
   onPress,
   onLongPress,
+  onDelete,
 }) => {
   const handlePress = () => onPress(item.id);
   const handleLongPress = () => onLongPress?.(item.id);
+  const handleDelete = () => onDelete?.(item.id);
 
   return (
     <TouchableOpacity
@@ -49,13 +52,29 @@ export const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({
         </Text>
       </View>
       
-      {item.messageCount > 0 && (
-        <View style={[styles.messageCount, isSelected && styles.selectedMessageCount]}>
-          <Text style={[styles.messageCountText, isSelected && styles.selectedMessageCountText]}>
-            {item.messageCount}
-          </Text>
-        </View>
-      )}
+      <View style={styles.rightContainer}>
+        {item.messageCount > 0 && (
+          <View style={[styles.messageCount, isSelected && styles.selectedMessageCount]}>
+            <Text style={[styles.messageCountText, isSelected && styles.selectedMessageCountText]}>
+              {item.messageCount}
+            </Text>
+          </View>
+        )}
+        
+        {onDelete && (
+          <TouchableOpacity
+            style={[styles.deleteButton, isSelected && styles.selectedDeleteButton]}
+            onPress={handleDelete}
+            activeOpacity={0.7}
+          >
+            <Ionicons 
+              name="trash-outline" 
+              size={16} 
+              color={isSelected ? "#FFFFFF" : "#EF4444"} 
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -102,6 +121,11 @@ const styles = StyleSheet.create({
   selectedTimestamp: {
     color: '#E0E7FF',
   },
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   messageCount: {
     backgroundColor: '#E5E7EB',
     borderRadius: 12,
@@ -120,5 +144,12 @@ const styles = StyleSheet.create({
   },
   selectedMessageCountText: {
     color: '#3B82F6',
+  },
+  deleteButton: {
+    padding: 4,
+    borderRadius: 4,
+  },
+  selectedDeleteButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
 }); 

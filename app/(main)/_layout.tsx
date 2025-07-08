@@ -12,6 +12,7 @@ const MainLayout = () => {
   const router = useRouter();
   const pathname = usePathname();
   const addChat = useChatStore((state) => state.addChat);
+  const deleteChat = useChatStore((state) => state.deleteChat);
 
   // Determine active tab based on current route
   const getActiveTab = () => {
@@ -44,6 +45,14 @@ const MainLayout = () => {
   const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
     if (section === 'library') router.push('/ai/library');
     else if (section === 'explore') router.push('/ai/explore');
+  };
+
+  const handleDeleteChat = (chatId: string) => {
+    deleteChat(chatId);
+    // If we're currently on the deleted chat, navigate to a new chat or home
+    if (pathname.includes(`/ai/(chat)/${chatId}`)) {
+      router.push('/ai');
+    }
   };
 
   return (
@@ -115,6 +124,7 @@ const MainLayout = () => {
         onSelectSection={handleSelectSection}
         onProfilePress={() => {}}
         onSettingsPress={() => {}}
+        onDeleteChat={handleDeleteChat}
       />
 
       {/* Custom Bottom Bar */}

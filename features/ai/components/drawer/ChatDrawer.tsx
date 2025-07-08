@@ -15,6 +15,7 @@ interface ChatDrawerProps {
   onSelectSection: (section: 'chats' | 'library' | 'explore') => void;
   onProfilePress: () => void;
   onSettingsPress: () => void;
+  onDeleteChat?: (chatId: string) => void;
 }
 
 export const ChatDrawer: React.FC<ChatDrawerProps> = ({
@@ -23,6 +24,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
   onSelectSection,
   onProfilePress,
   onSettingsPress,
+  onDeleteChat,
 }) => {
   const {
     isOpen,
@@ -92,6 +94,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
             onSelectChat={handleSelectChat}
             onSelectSection={handleSelectSection}
             onToggleHistory={toggleHistoryExpanded}
+            onDeleteChat={onDeleteChat}
           />
 
           <DrawerFooter
