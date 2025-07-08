@@ -32,6 +32,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
     currentChatId,
     addChat,
     updateChat,
+    updateChatWithTitle,
     setCurrentChat,
     clearCurrentChat,
   } = useChatStore();
@@ -118,7 +119,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
       // Update chat title if it's the first message
       if (updatedChat.messages.length === 1) {
         const titledChat = ChatService.updateChatTitle(updatedChat, messageText);
-        updateChat(currentChat.id, titledChat.messages);
+        updateChatWithTitle(currentChat.id, titledChat.messages, titledChat.title);
       }
 
       // Simulate AI response

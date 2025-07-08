@@ -29,7 +29,8 @@ export interface ChatState {
 
 export interface ChatActions {
   addChat: (chat: Chat) => void;
-  updateChat: (id: string, messages: Message[]) => void;
+  updateChat: (id: string, messages: Message[], title?: string) => void;
+  updateChatWithTitle: (id: string, messages: Message[], title: string) => void;
   deleteChat: (id: string) => void;
   setCurrentChat: (id: string) => void;
   clearCurrentChat: () => void;

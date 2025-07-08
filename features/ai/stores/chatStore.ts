@@ -20,13 +20,29 @@ export const useChatStore = create<ChatStore>()(
         }));
       },
 
-      updateChat: (id: string, messages: Message[]) => {
+      updateChat: (id: string, messages: Message[], title?: string) => {
         set((state) => ({
           chats: state.chats.map((chat) =>
             chat.id === id
               ? {
                   ...chat,
                   messages,
+                  title: title || chat.title,
+                  lastModified: new Date(),
+                }
+              : chat
+          ),
+        }));
+      },
+
+      updateChatWithTitle: (id: string, messages: Message[], title: string) => {
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === id
+              ? {
+                  ...chat,
+                  messages,
+                  title,
                   lastModified: new Date(),
                 }
               : chat
