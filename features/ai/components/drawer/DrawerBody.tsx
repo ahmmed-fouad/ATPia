@@ -13,6 +13,7 @@ export const DrawerBody: React.FC<DrawerBodyProps> = ({
   onSelectSection,
   onToggleHistory,
   onDeleteChat,
+  onDeleteAllChats,
 }) => {
   const renderSectionItem = (
     icon: string,
@@ -65,18 +66,33 @@ export const DrawerBody: React.FC<DrawerBodyProps> = ({
 
       {/* Chat History */}
       <View style={styles.historyContainer}>
-        <TouchableOpacity
-          style={styles.historyHeader}
-          onPress={onToggleHistory}
-          activeOpacity={0.7}
-        >
+        <View style={styles.historyHeader}>
           <Text style={styles.historyTitle}>Recent</Text>
-          <Ionicons
-            name={isHistoryExpanded ? 'chevron-up' : 'chevron-down'}
-            size={20}
-            color="#6B7280"
-          />
-        </TouchableOpacity>
+          
+          <View style={styles.historyControls}>
+            {isHistoryExpanded && chatHistory.length > 0 && onDeleteAllChats && (
+              <TouchableOpacity
+                style={styles.deleteAllButton}
+                onPress={onDeleteAllChats}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="trash-outline" size={18} color="#EF4444" />
+              </TouchableOpacity>
+            )}
+            
+            <TouchableOpacity
+              style={styles.historyToggle}
+              onPress={onToggleHistory}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={isHistoryExpanded ? 'chevron-up' : 'chevron-down'}
+                size={20}
+                color="#6B7280"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {isHistoryExpanded && (
           <View style={styles.historyList}>
@@ -183,10 +199,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
+  historyToggle: {
+    padding: 4,
+  },
   historyTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
+  },
+  historyControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  deleteAllButton: {
+    padding: 4,
+    borderRadius: 4,
   },
   historyList: {
     flex: 1,

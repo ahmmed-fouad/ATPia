@@ -13,6 +13,7 @@ const MainLayout = () => {
   const pathname = usePathname();
   const addChat = useChatStore((state) => state.addChat);
   const deleteChat = useChatStore((state) => state.deleteChat);
+  const chats = useChatStore((state) => state.chats);
 
   // Determine active tab based on current route
   const getActiveTab = () => {
@@ -53,6 +54,15 @@ const MainLayout = () => {
     if (pathname.includes(`/ai/(chat)/${chatId}`)) {
       router.push('/ai');
     }
+  };
+
+  const handleDeleteAllChats = () => {
+    // Delete all chats by clearing the chats array
+    chats.forEach(chat => {
+      deleteChat(chat.id);
+    });
+    // Navigate to AI home screen
+    router.push('/ai');
   };
 
   return (
@@ -125,6 +135,7 @@ const MainLayout = () => {
         onProfilePress={() => {}}
         onSettingsPress={() => {}}
         onDeleteChat={handleDeleteChat}
+        onDeleteAllChats={handleDeleteAllChats}
       />
 
       {/* Custom Bottom Bar */}

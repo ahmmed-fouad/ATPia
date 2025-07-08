@@ -34,6 +34,7 @@ export interface DrawerBodyProps {
   onSelectSection: (section: 'chats' | 'library' | 'explore') => void;
   onToggleHistory: () => void;
   onDeleteChat?: (chatId: string) => void;
+  onDeleteAllChats?: () => void;
 }
 
 export interface DrawerFooterProps {
