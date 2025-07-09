@@ -1,11 +1,8 @@
-import { Text, View } from 'react-native'
+import React from 'react';
+import { AnalyticsDashboard } from '../../../features/analytics/screens/AnalyticsDashboard';
 
 const Analytics = () => {
-  return (
-    <View>
-      <Text>Analytics</Text>
-    </View>
-  );
+  return <AnalyticsDashboard />;
 };
 
 export default Analytics;
