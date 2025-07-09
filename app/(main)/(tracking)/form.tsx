@@ -1,11 +1,5 @@
-import { View, Text } from 'react-native'
+import FormScreen from '../../../features/form/screens/FormScreen';
 
-const Form = () => {
-  return (
-    <View>
-      <Text>Form</Text>
-    </View>
-  );
-};
-
-export default Form;
+export default function Form() {
+  return <FormScreen />;
+}
