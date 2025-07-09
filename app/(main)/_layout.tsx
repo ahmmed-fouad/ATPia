@@ -20,7 +20,7 @@ const MainLayout = () => {
   const getActiveTab = () => {
     if (pathname.includes('/ai')) return 'ai';
     if (pathname.includes('/tracking')) return 'tracking';
-    if (pathname.includes('/nutrition')) return 'nutrition';
+    if (pathname.includes('/nutration')) return 'nutration';
     if (pathname.includes('/social')) return 'social';
     if (pathname.includes('/home')) return 'home';
     return 'ai'; // default
@@ -30,7 +30,11 @@ const MainLayout = () => {
   const isHomeScreen = activeTab === 'home';
 
   const handleTabPress = (tabName: 'ai' | 'tracking' | 'nutrition' | 'social' | 'home') => {
-    router.push(`/(main)/${tabName}`);
+      if (tabName === "nutrition") {
+        router.push("/(main)/(nutration)/food-scanner"); // Route to nutrition layout with default tab
+      } else {
+        router.push(`/(main)/${tabName}`);
+      }
   };
 
   // Drawer navigation handlers
