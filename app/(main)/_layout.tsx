@@ -32,6 +32,8 @@ const MainLayout = () => {
   const handleTabPress = (tabName: 'ai' | 'tracking' | 'nutrition' | 'social' | 'home') => {
       if (tabName === "nutrition") {
         router.push("/(main)/(nutration)/food-scanner"); // Route to nutrition layout with default tab
+      } else if (tabName === "tracking") {
+        router.push("/(main)/(tracking)/tracker"); // Route to tracking layout with default tab
       } else {
         router.push(`/(main)/${tabName}`);
       }
