@@ -11,6 +11,9 @@ import {
   TrendingUp,
   Calendar,
   BarChart3,
+  Star,
+  MessageSquare,
+  
 } from "lucide-react-native";
 
 export type TabItem = {
@@ -31,6 +34,12 @@ export type TrackingFeatures = {
   icon: React.ComponentType<{ size: number; color: string }>;
 };
 
+export type SocialFeatures = {
+  id: "forum" | "blog" | "testimonials" | "chat";
+  label: string;
+  icon: React.ComponentType<{ size: number; color: string }>;
+};
+
 export const tabItems: TabItem[] = [
   { id: "ai", label: "AI", icon: BotMessageSquare },
   { id: "tracking", label: "Tracking", icon: ChartNoAxesCombined },
@@ -46,24 +55,15 @@ export const nutritionFeatures: NutritionFeatures[] = [
 ];
 
 export const trackingFeatures: TrackingFeatures[] = [
-  {
-    id: "tracker",
-    label: "Progress Tracker",
-    icon: Target,
-  },
-  {
-    id: "habits",
-    label: "Habits",
-    icon: TrendingUp,
-  },
-  {
-    id: "form",
-    label: "Form",
-    icon: Calendar,
-  },
-  {
-    id: "analytics",
-    label: "Analytics",
-    icon: BarChart3,
-  },
+  {id: "tracker",label: "Progress Tracker",icon: Target,},
+  {id: "habits",label: "Habits",icon: TrendingUp,},
+  {id: "form",label: "Form",icon: Calendar, },
+  {id: "analytics",label: "Analytics",icon: BarChart3,},
 ];
+
+export const socialFeatures: SocialFeatures[] = [
+   {id: "forum", label: "Forum", icon: Users,},
+   {id: "blog",label: "Blog",icon: BookOpen,},
+   {id: "testimonials",label: "Testimonials", icon: Star,},
+   {id: "chat",label: "Chat",icon: MessageSquare,},
+ ];

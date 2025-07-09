@@ -34,6 +34,8 @@ const MainLayout = () => {
         router.push("/(main)/(nutration)/food-scanner"); // Route to nutrition layout with default tab
       } else if (tabName === "tracking") {
         router.push("/(main)/(tracking)/tracker"); // Route to tracking layout with default tab
+      } else if (tabName === "social") {
+        router.push("/(main)/(social)/forum"); // Route to social layout with default tab
       } else {
         router.push(`/(main)/${tabName}`);
       }
