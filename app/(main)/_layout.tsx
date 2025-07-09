@@ -16,29 +16,56 @@ const MainLayout = () => {
   const deleteChat = useChatStore((state) => state.deleteChat);
   const chats = useChatStore((state) => state.chats);
 
-  // Determine active tab based on current route
+  // Navigation mapping - much cleaner!
+  const tabRoutes = {
+    'ai': '/(main)/ai',
+    'tracking': '/(main)/(tracking)/tracker',
+    'nutrition': '/(main)/(nutration)/food-scanner',
+    'social': '/(main)/(social)/forum',
+    'home': '/(main)/home'
+  } as const;
+
+  // Path to tab mapping for active state
+  const pathToTab = {
+    '/ai': 'ai',
+    '/tracking': 'tracking', 
+    '/nutration': 'nutrition',
+    '/social': 'social',
+    '/home': 'home'
+  } as const;
+
+  // Determine active tab based on current route - CLEANER
   const getActiveTab = () => {
-    if (pathname.includes('/ai')) return 'ai';
-    if (pathname.includes('/tracking')) return 'tracking';
-    if (pathname.includes('/nutration')) return 'nutration';
-    if (pathname.includes('/social')) return 'social';
-    if (pathname.includes('/home')) return 'home';
+    // Map specific screens to their parent tabs
+    const screenToTab = {
+      '/ai': 'ai',
+      '/tracker': 'tracking',
+      '/habits': 'tracking', 
+      '/analytics': 'tracking',
+      '/food-scanner': 'nutrition',
+      '/diet-calculator': 'nutrition',
+      '/meal-plans': 'nutrition',
+      '/grocery-list': 'nutrition',
+      '/forum': 'social',
+      '/blog': 'social',
+      '/testimonials': 'social',
+      '/chat': 'social',
+      '/home': 'home'
+    };
+    
+    for (const [screen, tab] of Object.entries(screenToTab)) {
+      if (pathname.includes(screen)) return tab;
+    }
+    
     return 'ai'; // default
   };
 
   const activeTab = getActiveTab();
   const isHomeScreen = activeTab === 'home';
 
-  const handleTabPress = (tabName: 'ai' | 'tracking' | 'nutrition' | 'social' | 'home') => {
-      if (tabName === "nutrition") {
-        router.push("/(main)/(nutration)/food-scanner"); // Route to nutrition layout with default tab
-      } else if (tabName === "tracking") {
-        router.push("/(main)/(tracking)/tracker"); // Route to tracking layout with default tab
-      } else if (tabName === "social") {
-        router.push("/(main)/(social)/forum"); // Route to social layout with default tab
-      } else {
-        router.push(`/(main)/${tabName}`);
-      }
+  const handleTabPress = (tabName: keyof typeof tabRoutes) => {
+    const route = tabRoutes[tabName];
+    router.push(route);
   };
 
   // Drawer navigation handlers
