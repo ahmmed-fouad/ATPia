@@ -1,8 +1,9 @@
-import { CustomBottomBar } from '@/components';
+import { CustomBar } from '@/components';
 import { images } from '@/constans';
 import { ChatDrawer } from '@/features/ai/components/drawer/ChatDrawer';
 import { ChatService } from '@/features/ai/services/chatService';
 import { useChatStore } from '@/features/ai/stores/chatStore';
+import { tabItems } from '@/shared/data/tabItems';
 import { Slot, usePathname, useRouter } from 'expo-router';
 import { Bell, HomeIcon, Menu, Search, Settings } from 'lucide-react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
@@ -139,7 +140,8 @@ const MainLayout = () => {
       />
 
       {/* Custom Bottom Bar */}
-      <CustomBottomBar
+      <CustomBar
+        tabItems={tabItems}
         activeTab={isHomeScreen ? "none" : activeTab}
         onTabPress={handleTabPress}
       />
