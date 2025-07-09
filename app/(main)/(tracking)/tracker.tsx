@@ -1,11 +1,5 @@
-import { View, Text } from 'react-native'
+import {TrackerScreen} from '../../../features/tracking/screens';
 
-const Tracker = () => {
-  return (
-    <View>
-      <Text>Tracker</Text>
-    </View>
-  );
-};
-
-export default Tracker;
+export default function Tracker() {
+  return <TrackerScreen />;
+}

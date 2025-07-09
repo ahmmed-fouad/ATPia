@@ -128,7 +128,7 @@ const MainLayout = () => {
       <View className="flex-row items-center space-x-3 justify-between px-4  bg-white border-b border-gray-200">
         {/* Left Icons */}
         <View className="flex-row items-center space-x-3  py-3 gap-4">
-          <TouchableOpacity onPress={() => handleTabPress('home')}>
+          <TouchableOpacity onPress={() => handleTabPress("home")}>
             <HomeIcon size={25} color={isHomeScreen ? "#3b82f6" : "#374151"} />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -179,6 +179,8 @@ const MainLayout = () => {
         tabItems={tabItems}
         activeTab={isHomeScreen ? "none" : activeTab}
         onTabPress={handleTabPress}
+        inactiveIconColor="#9ca3af"
+        activeTextColor="#6366f1"
       />
     </SafeAreaView>
   );

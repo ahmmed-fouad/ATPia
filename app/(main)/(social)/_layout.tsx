@@ -30,6 +30,8 @@ const SocialLayout = () => {
         tabItems={socialFeatures}
         activeTab={activeTab}
         onTabPress={handleTabPress}
+        inactiveIconColor="#9ca3af"
+        activeTextColor="#6366f1"
       />
 
       {/* Content area - child screens will render here */}

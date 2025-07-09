@@ -26,7 +26,7 @@ const CustomBar = <T extends string = string>({
   onTabPress,
   containerStyle,
   itemStyle,
-  iconSize = 24,
+  iconSize = 28,
   activeIconColor = "#3b82f6",
   inactiveIconColor = "#6b7280",
   activeTextColor = "text-blue-500",
@@ -48,7 +48,7 @@ const CustomBar = <T extends string = string>({
               color={activeTab === item.id ? activeIconColor : inactiveIconColor} 
             />
             <Text 
-              className={`text-xs mt-1 font-semibold ${
+              className={`text-sm mt-1 font-semibold ${
                 activeTab === item.id ? activeTextColor : inactiveTextColor
               } ${textStyle || ''}`}
             >
