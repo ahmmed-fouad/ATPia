@@ -1,11 +1,5 @@
-import { View, Text } from 'react-native'
+import HabitsScreen from '../../../features/habits/screens/HabitsScreen';
 
-const Habits = () => {
-  return (
-    <View>
-      <Text>Habits</Text>
-    </View>
-  );
-};
-
-export default Habits;
+export default function Habits() {
+  return <HabitsScreen />;
+}
