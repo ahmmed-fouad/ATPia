@@ -1,11 +1,6 @@
-import { View, Text } from 'react-native'
+import React from 'react';
+import { BlogScreen } from '../../../features/social/blog/screens/BlogScreen';
 
-const Blog = () => {
-  return (
-    <View>
-      <Text>Blog</Text>
-    </View>
-  );
-};
-
-export default Blog;
+export default function Blog() {
+  return <BlogScreen />;
+}
