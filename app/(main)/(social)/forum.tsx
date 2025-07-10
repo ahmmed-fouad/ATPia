@@ -1,11 +1,6 @@
-import { View, Text } from 'react-native'
+import React from 'react';
+import { ForumScreen } from '../../../features/social/forum/screens/ForumScreen';
 
-const Forum = () => {
-  return (
-    <View>
-      <Text>Forum</Text>
-    </View>
-  );
-};
-
-export default Forum;
+export default function Forum() {
+  return <ForumScreen />;
+}
