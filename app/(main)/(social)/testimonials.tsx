@@ -1,11 +1,3 @@
-import { View, Text } from 'react-native'
+import TestimonialsScreen from '../../../features/social/testimonials/screens/TestimonialsScreen';
 
-const Testimonials = () => {
-  return (
-    <View>
-      <Text>Testimonials</Text>
-    </View>
-  );
-};
-
-export default Testimonials;
+export default TestimonialsScreen;
