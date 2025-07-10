@@ -1,11 +1,8 @@
-import { View, Text } from 'react-native'
+import React from 'react';
+import { GroceryListScreen } from '../../../features/grocery-list';
 
 const GroceryList = () => {
-  return (
-    <View>
-      <Text>GroceryList</Text>
-    </View>
-  );
+  return <GroceryListScreen />;
 };
 
 export default GroceryList;
