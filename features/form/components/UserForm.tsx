@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, Platform, Switch } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useFormStore } from '../stores/formStore';
 import type { UserFormFields } from '../types/index';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { FormField } from './FormField';
 
 const mealOptions = ['Pizza', 'Burger', 'Pasta', 'Other'];
 const commonMealOptions = ['Rice', 'Chicken', 'Fish', 'Other'];
@@ -26,62 +26,6 @@ const validationSchema = Yup.object().shape({
 export default function UserForm() {
   const { userForm, setUserForm } = useFormStore();
 
-  // Local state for each dropdown
-  const [genderOpen, setGenderOpen] = useState(false);
-  const [genderValue, setGenderValue] = useState(userForm.gender);
-  const [pregnancyMonthOpen, setPregnancyMonthOpen] = useState(false);
-  const [pregnancyMonthValue, setPregnancyMonthValue] = useState(userForm.pregnancyMonth);
-  const [favoriteMealOpen, setFavoriteMealOpen] = useState(false);
-  const [favoriteMealValue, setFavoriteMealValue] = useState(userForm.favoriteMeal);
-  const [commonMealsOpen, setCommonMealsOpen] = useState(false);
-  const [commonMealsValue, setCommonMealsValue] = useState(userForm.commonMeals);
-  const [favoriteFruitOpen, setFavoriteFruitOpen] = useState(false);
-  const [favoriteFruitValue, setFavoriteFruitValue] = useState(userForm.favoriteFruit);
-  const [favoriteVegetablesOpen, setFavoriteVegetablesOpen] = useState(false);
-  const [favoriteVegetablesValue, setFavoriteVegetablesValue] = useState(userForm.favoriteVegetables);
-  const [favoriteSportOpen, setFavoriteSportOpen] = useState(false);
-  const [favoriteSportValue, setFavoriteSportValue] = useState(userForm.favoriteSport);
-
-  // Sync local dropdown value with Formik initialValues
-  useEffect(() => { setGenderValue(userForm.gender); }, [userForm.gender]);
-  useEffect(() => { setPregnancyMonthValue(userForm.pregnancyMonth); }, [userForm.pregnancyMonth]);
-  useEffect(() => { setFavoriteMealValue(userForm.favoriteMeal); }, [userForm.favoriteMeal]);
-  useEffect(() => { setCommonMealsValue(userForm.commonMeals); }, [userForm.commonMeals]);
-  useEffect(() => { setFavoriteFruitValue(userForm.favoriteFruit); }, [userForm.favoriteFruit]);
-  useEffect(() => { setFavoriteVegetablesValue(userForm.favoriteVegetables); }, [userForm.favoriteVegetables]);
-  useEffect(() => { setFavoriteSportValue(userForm.favoriteSport); }, [userForm.favoriteSport]);
-
-  // Dropdown items
-  const genderItems = [
-    { label: 'Select', value: '' },
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-  ];
-  const pregnancyMonthItems = [
-    { label: 'Select', value: '' },
-    ...pregnancyMonths.map(m => ({ label: m, value: m })),
-  ];
-  const mealItems = [
-    { label: 'Select', value: '' },
-    ...mealOptions.map(m => ({ label: m, value: m })),
-  ];
-  const commonMealItems = [
-    { label: 'Select', value: '' },
-    ...commonMealOptions.map(m => ({ label: m, value: m })),
-  ];
-  const fruitItems = [
-    { label: 'Select', value: '' },
-    ...fruitOptions.map(m => ({ label: m, value: m })),
-  ];
-  const vegetableItems = [
-    { label: 'Select', value: '' },
-    ...vegetableOptions.map(m => ({ label: m, value: m })),
-  ];
-  const sportItems = [
-    { label: 'Select', value: '' },
-    ...sportOptions.map(m => ({ label: m, value: m })),
-  ];
-
   return (
     <Formik
       initialValues={userForm}
@@ -91,344 +35,304 @@ export default function UserForm() {
     >
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <KeyboardAwareScrollView contentContainerStyle={{ alignItems: 'center', padding: 20 }} style={{ width: '100%' }}>
-          <View style={{ width: '100%', maxWidth: 420, backgroundColor: 'rgba(255,255,255,0.98)', borderRadius: 18, padding: 20, shadowColor: '#60a5fa', shadowOffset: { width: 0, height: 4 }, shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13, shadowRadius: 10, elevation: 4 }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#2563eb', marginBottom: 16 }}>User Form</Text>
+          <View style={{
+            width: '100%',
+            maxWidth: 420,
+            backgroundColor: 'rgba(255,255,255,0.96)',
+            borderRadius: 18,
+            padding: 20,
+            shadowColor: '#a7f3d0',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+            shadowRadius: 10,
+            elevation: 4,
+          }}>
             {/* Name */}
-            <FormField label="Name *" error={errors.name} touched={touched.name}>
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle(!!errors.name && !!touched.name)}
-                  placeholder="Enter your name"
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Name *"
+              value={values.name}
+              onChangeText={handleChange('name')}
+              placeholder="Enter your name"
+              error={errors.name}
+              touched={touched.name}
+              required
+            />
+
             {/* Age */}
-            <FormField label="Age *" error={errors.age} touched={touched.age}>
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle(!!errors.age && !!touched.age)}
-                  placeholder="Enter your age"
-                  keyboardType="numeric"
-                  onChangeText={handleChange('age')}
-                  onBlur={handleBlur('age')}
-                  value={values.age}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Age *"
+              value={values.age}
+              onChangeText={handleChange('age')}
+              placeholder="Enter your age"
+              type="number"
+              keyboardType="numeric"
+              error={errors.age}
+              touched={touched.age}
+              required
+            />
+
             {/* Gender */}
-            <FormField label="Gender *" error={errors.gender} touched={touched.gender}>
-              <DropDownPicker
-                open={genderOpen}
-                setOpen={setGenderOpen}
-                value={genderValue}
-                setValue={setGenderValue}
-                items={genderItems}
-                onChangeValue={val => setFieldValue('gender', val)}
-                style={dropdownStyle(!!errors.gender && !!touched.gender)}
-                dropDownContainerStyle={dropdownContainerStyle}
-                listItemLabelStyle={{ fontSize: 15 }}
-                textStyle={{ fontSize: 15 }}
-                placeholder="Select"
-                zIndex={1000}
-              />
-            </FormField>
+            <FormField
+              label="Gender *"
+              value={values.gender}
+              onChangeText={() => {}} // Not used for select
+              type="select"
+              options={[
+                { label: 'Select', value: '' },
+                { label: 'Male', value: 'male' },
+                { label: 'Female', value: 'female' },
+              ]}
+              selectedOption={values.gender}
+              onSelectOption={(value) => setFieldValue('gender', value)}
+              error={errors.gender}
+              touched={touched.gender}
+              required
+            />
+
             {/* Pregnant (only if female) */}
             {values.gender === 'female' && (
-              <FormField label="Pregnant?">
+              <View style={{ marginBottom: 16 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                  <Text style={{ 
+                    fontSize: 14, 
+                    color: '#374151', 
+                    fontWeight: '600',
+                    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+                    letterSpacing: 0.2,
+                  }}>
+                    Pregnant?
+                  </Text>
+                </View>
                 <Switch
                   value={!!values.pregnant}
                   onValueChange={val => { setFieldValue('pregnant', val); }}
                   style={{ marginVertical: 4 }}
+                  trackColor={{ false: '#e5e7eb', true: '#059669' }}
+                  thumbColor={values.pregnant ? '#fff' : '#f3f4f6'}
                 />
-              </FormField>
+              </View>
             )}
+
             {/* Pregnancy Month (only if pregnant) */}
             {values.gender === 'female' && values.pregnant && (
-              <FormField label="Pregnancy Month *">
-                <DropDownPicker
-                  open={pregnancyMonthOpen}
-                  setOpen={setPregnancyMonthOpen}
-                  value={pregnancyMonthValue}
-                  setValue={setPregnancyMonthValue}
-                  items={pregnancyMonthItems}
-                  onChangeValue={val => setFieldValue('pregnancyMonth', val)}
-                  style={dropdownStyle()}
-                  dropDownContainerStyle={dropdownContainerStyle}
-                  listItemLabelStyle={{ fontSize: 15 }}
-                  textStyle={{ fontSize: 15 }}
-                  placeholder="Select"
-                  zIndex={900}
-                />
-              </FormField>
+              <FormField
+                label="Pregnancy Month *"
+                value={values.pregnancyMonth}
+                onChangeText={() => {}} // Not used for select
+                type="select"
+                options={[
+                  { label: 'Select', value: '' },
+                  ...pregnancyMonths.map(m => ({ label: m, value: m })),
+                ]}
+                selectedOption={values.pregnancyMonth}
+                onSelectOption={(value) => setFieldValue('pregnancyMonth', value)}
+              />
             )}
+
             {/* Length */}
-            <FormField label="Length (cm) *" error={errors.length} touched={touched.length}>
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle(!!errors.length && !!touched.length)}
-                  placeholder="Enter your height in cm"
-                  keyboardType="numeric"
-                  onChangeText={handleChange('length')}
-                  onBlur={handleBlur('length')}
-                  value={values.length}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Length (cm) *"
+              value={values.length}
+              onChangeText={handleChange('length')}
+              placeholder="Enter your height in cm"
+              type="number"
+              keyboardType="numeric"
+              error={errors.length}
+              touched={touched.length}
+              required
+            />
+
             {/* Weight */}
-            <FormField label="Weight (kg) *" error={errors.weight} touched={touched.weight}>
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle(!!errors.weight && !!touched.weight)}
-                  placeholder="Enter your weight in kg"
-                  keyboardType="numeric"
-                  onChangeText={handleChange('weight')}
-                  onBlur={handleBlur('weight')}
-                  value={values.weight}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Weight (kg) *"
+              value={values.weight}
+              onChangeText={handleChange('weight')}
+              placeholder="Enter your weight in kg"
+              type="number"
+              keyboardType="numeric"
+              error={errors.weight}
+              touched={touched.weight}
+              required
+            />
+
             {/* Water per day */}
-            <FormField label="Water drunk per day (L) *" error={errors.waterPerDay} touched={touched.waterPerDay}>
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle(!!errors.waterPerDay && !!touched.waterPerDay)}
-                  placeholder="How much water do you drink per day?"
-                  keyboardType="numeric"
-                  onChangeText={handleChange('waterPerDay')}
-                  onBlur={handleBlur('waterPerDay')}
-                  value={values.waterPerDay}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Water drunk per day (L) *"
+              value={values.waterPerDay}
+              onChangeText={handleChange('waterPerDay')}
+              placeholder="How much water do you drink per day?"
+              type="number"
+              keyboardType="numeric"
+              error={errors.waterPerDay}
+              touched={touched.waterPerDay}
+              required
+            />
+
             {/* Meals per day */}
-            <FormField label="Number of meals per day (optional)">
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle()}
-                  placeholder="e.g. 3"
-                  keyboardType="numeric"
-                  onChangeText={handleChange('mealsPerDay')}
-                  onBlur={handleBlur('mealsPerDay')}
-                  value={values.mealsPerDay}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Number of meals per day (optional)"
+              value={values.mealsPerDay}
+              onChangeText={handleChange('mealsPerDay')}
+              placeholder="e.g. 3"
+              type="number"
+              keyboardType="numeric"
+            />
+
             {/* Favorite meal */}
-            <FormField label="Favorite meal (optional)">
-              <DropDownPicker
-                open={favoriteMealOpen}
-                setOpen={setFavoriteMealOpen}
-                value={favoriteMealValue}
-                setValue={setFavoriteMealValue}
-                items={mealItems}
-                onChangeValue={val => setFieldValue('favoriteMeal', val)}
-                style={dropdownStyle()}
-                dropDownContainerStyle={dropdownContainerStyle}
-                listItemLabelStyle={{ fontSize: 15 }}
-                textStyle={{ fontSize: 15 }}
-                placeholder="Select"
-                zIndex={800}
+            <FormField
+              label="Favorite meal (optional)"
+              value={values.favoriteMeal}
+              onChangeText={() => {}} // Not used for select
+              type="select"
+              options={[
+                { label: 'Select', value: '' },
+                ...mealOptions.map(m => ({ label: m, value: m })),
+              ]}
+              selectedOption={values.favoriteMeal}
+              onSelectOption={(value) => setFieldValue('favoriteMeal', value)}
+            />
+
+            {values.favoriteMeal === 'Other' && (
+              <FormField
+                label=""
+                value={values.favoriteMealOther}
+                onChangeText={handleChange('favoriteMealOther')}
+                placeholder="Please specify"
               />
-              {values.favoriteMeal === 'Other' && (
-                <View style={{ width: '100%' }}>
-                  <TextInput
-                    style={inputStyle()}
-                    placeholder="Please specify"
-                    onChangeText={handleChange('favoriteMealOther')}
-                    onBlur={handleBlur('favoriteMealOther')}
-                    value={values.favoriteMealOther}
-                  />
-                </View>
-              )}
-            </FormField>
+            )}
+
             {/* Common meals */}
-            <FormField label="Common meals (optional)">
-              <DropDownPicker
-                open={commonMealsOpen}
-                setOpen={setCommonMealsOpen}
-                value={commonMealsValue}
-                setValue={setCommonMealsValue}
-                items={commonMealItems}
-                onChangeValue={val => setFieldValue('commonMeals', val)}
-                style={dropdownStyle()}
-                dropDownContainerStyle={dropdownContainerStyle}
-                listItemLabelStyle={{ fontSize: 15 }}
-                textStyle={{ fontSize: 15 }}
-                placeholder="Select"
-                zIndex={700}
+            <FormField
+              label="Common meals (optional)"
+              value={values.commonMeals}
+              onChangeText={() => {}} // Not used for select
+              type="select"
+              options={[
+                { label: 'Select', value: '' },
+                ...commonMealOptions.map(m => ({ label: m, value: m })),
+              ]}
+              selectedOption={values.commonMeals}
+              onSelectOption={(value) => setFieldValue('commonMeals', value)}
+            />
+
+            {values.commonMeals === 'Other' && (
+              <FormField
+                label=""
+                value={values.commonMealsOther}
+                onChangeText={handleChange('commonMealsOther')}
+                placeholder="Please specify"
               />
-              {values.commonMeals === 'Other' && (
-                <View style={{ width: '100%' }}>
-                  <TextInput
-                    style={inputStyle()}
-                    placeholder="Please specify"
-                    onChangeText={handleChange('commonMealsOther')}
-                    onBlur={handleBlur('commonMealsOther')}
-                    value={values.commonMealsOther}
-                  />
-                </View>
-              )}
-            </FormField>
+            )}
+
             {/* Favorite fruit */}
-            <FormField label="Favorite fruit (optional)">
-              <DropDownPicker
-                open={favoriteFruitOpen}
-                setOpen={setFavoriteFruitOpen}
-                value={favoriteFruitValue}
-                setValue={setFavoriteFruitValue}
-                items={fruitItems}
-                onChangeValue={val => setFieldValue('favoriteFruit', val)}
-                style={dropdownStyle()}
-                dropDownContainerStyle={dropdownContainerStyle}
-                listItemLabelStyle={{ fontSize: 15 }}
-                textStyle={{ fontSize: 15 }}
-                placeholder="Select"
-                zIndex={600}
+            <FormField
+              label="Favorite fruit (optional)"
+              value={values.favoriteFruit}
+              onChangeText={() => {}} // Not used for select
+              type="select"
+              options={[
+                { label: 'Select', value: '' },
+                ...fruitOptions.map(m => ({ label: m, value: m })),
+              ]}
+              selectedOption={values.favoriteFruit}
+              onSelectOption={(value) => setFieldValue('favoriteFruit', value)}
+            />
+
+            {values.favoriteFruit === 'Other' && (
+              <FormField
+                label=""
+                value={values.favoriteFruitOther}
+                onChangeText={handleChange('favoriteFruitOther')}
+                placeholder="Please specify"
               />
-              {values.favoriteFruit === 'Other' && (
-                <View style={{ width: '100%' }}>
-                  <TextInput
-                    style={inputStyle()}
-                    placeholder="Please specify"
-                    onChangeText={handleChange('favoriteFruitOther')}
-                    onBlur={handleBlur('favoriteFruitOther')}
-                    value={values.favoriteFruitOther}
-                  />
-                </View>
-              )}
-            </FormField>
+            )}
+
             {/* Favorite vegetables */}
-            <FormField label="Favorite vegetables (optional)">
-              <DropDownPicker
-                open={favoriteVegetablesOpen}
-                setOpen={setFavoriteVegetablesOpen}
-                value={favoriteVegetablesValue}
-                setValue={setFavoriteVegetablesValue}
-                items={vegetableItems}
-                onChangeValue={val => setFieldValue('favoriteVegetables', val)}
-                style={dropdownStyle()}
-                dropDownContainerStyle={dropdownContainerStyle}
-                listItemLabelStyle={{ fontSize: 15 }}
-                textStyle={{ fontSize: 15 }}
-                placeholder="Select"
-                zIndex={500}
+            <FormField
+              label="Favorite vegetables (optional)"
+              value={values.favoriteVegetables}
+              onChangeText={() => {}} // Not used for select
+              type="select"
+              options={[
+                { label: 'Select', value: '' },
+                ...vegetableOptions.map(m => ({ label: m, value: m })),
+              ]}
+              selectedOption={values.favoriteVegetables}
+              onSelectOption={(value) => setFieldValue('favoriteVegetables', value)}
+            />
+
+            {values.favoriteVegetables === 'Other' && (
+              <FormField
+                label=""
+                value={values.favoriteVegetablesOther}
+                onChangeText={handleChange('favoriteVegetablesOther')}
+                placeholder="Please specify"
               />
-              {values.favoriteVegetables === 'Other' && (
-                <View style={{ width: '100%' }}>
-                  <TextInput
-                    style={inputStyle()}
-                    placeholder="Please specify"
-                    onChangeText={handleChange('favoriteVegetablesOther')}
-                    onBlur={handleBlur('favoriteVegetablesOther')}
-                    value={values.favoriteVegetablesOther}
-                  />
-                </View>
-              )}
-            </FormField>
+            )}
+
             {/* Favorite sport */}
-            <FormField label="Favorite sport (optional)">
-              <DropDownPicker
-                open={favoriteSportOpen}
-                setOpen={setFavoriteSportOpen}
-                value={favoriteSportValue}
-                setValue={setFavoriteSportValue}
-                items={sportItems}
-                onChangeValue={val => setFieldValue('favoriteSport', val)}
-                style={dropdownStyle()}
-                dropDownContainerStyle={dropdownContainerStyle}
-                listItemLabelStyle={{ fontSize: 15 }}
-                textStyle={{ fontSize: 15 }}
-                placeholder="Select"
-                zIndex={400}
+            <FormField
+              label="Favorite sport (optional)"
+              value={values.favoriteSport}
+              onChangeText={() => {}} // Not used for select
+              type="select"
+              options={[
+                { label: 'Select', value: '' },
+                ...sportOptions.map(m => ({ label: m, value: m })),
+              ]}
+              selectedOption={values.favoriteSport}
+              onSelectOption={(value) => setFieldValue('favoriteSport', value)}
+            />
+
+            {values.favoriteSport === 'Other' && (
+              <FormField
+                label=""
+                value={values.favoriteSportOther}
+                onChangeText={handleChange('favoriteSportOther')}
+                placeholder="Please specify"
               />
-              {values.favoriteSport === 'Other' && (
-                <View style={{ width: '100%' }}>
-                  <TextInput
-                    style={inputStyle()}
-                    placeholder="Please specify"
-                    onChangeText={handleChange('favoriteSportOther')}
-                    onBlur={handleBlur('favoriteSportOther')}
-                    value={values.favoriteSportOther}
-                  />
-                </View>
-              )}
-            </FormField>
+            )}
+
             {/* Exercise hours per day */}
-            <FormField label="Hours of exercise per day (optional)">
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  style={inputStyle()}
-                  placeholder="e.g. 1"
-                  keyboardType="numeric"
-                  onChangeText={handleChange('exerciseHoursPerDay')}
-                  onBlur={handleBlur('exerciseHoursPerDay')}
-                  value={values.exerciseHoursPerDay}
-                />
-              </View>
-            </FormField>
+            <FormField
+              label="Hours of exercise per day (optional)"
+              value={values.exerciseHoursPerDay}
+              onChangeText={handleChange('exerciseHoursPerDay')}
+              placeholder="e.g. 1"
+              type="number"
+              keyboardType="numeric"
+            />
+
             {/* Submit button */}
             <TouchableOpacity
               onPress={() => handleSubmit()}
               style={{
-                backgroundColor: '#2563eb',
+                backgroundColor: '#059669',
                 borderRadius: 14,
-                paddingVertical: 12,
+                paddingVertical: 14,
                 alignItems: 'center',
-                marginTop: 8,
+                marginTop: 16,
+                shadowColor: '#059669',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: Platform.OS === 'ios' ? 0.15 : 0.20,
+                shadowRadius: 4,
+                elevation: 3,
               }}
               activeOpacity={0.85}
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Save</Text>
+              <Text style={{ 
+                color: '#fff', 
+                fontWeight: 'bold', 
+                fontSize: 16,
+                fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+                letterSpacing: 0.5,
+              }}>
+                Save Profile
+              </Text>
             </TouchableOpacity>
           </View>
         </KeyboardAwareScrollView>
       )}
     </Formik>
   );
-}
-
-function FormField({ label, children, error, touched }: { label: string; children: React.ReactNode; error?: string; touched?: boolean }) {
-  return (
-    <View style={{ marginBottom: 14 }}>
-      <Text style={{ fontSize: 14, color: '#222', marginBottom: 4, fontWeight: '500' }}>{label}</Text>
-      {children}
-      {error && touched && (
-        <Text style={{ color: '#f87171', fontSize: 12, marginTop: 2 }}>{error}</Text>
-      )}
-    </View>
-  );
-}
-
-function inputStyle(error?: boolean) {
-  return {
-    borderRadius: 10,
-    backgroundColor: '#f3f4f6',
-    padding: 10,
-    fontSize: 15,
-    color: '#222',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
-    borderWidth: error ? 1 : 0,
-    borderColor: error ? '#f87171' : 'transparent',
-    marginBottom: 2,
-    minHeight: 40,
-  };
-}
-
-const dropdownStyle = (error?: boolean) => ({
-  borderRadius: 10,
-  backgroundColor: '#f3f4f6',
-  borderWidth: error ? 1 : 0,
-  borderColor: error ? '#f87171' : '#e5e7eb',
-  minHeight: 40,
-  height: 40,
-});
-
-const dropdownContainerStyle = {
-  borderRadius: 10,
-  backgroundColor: '#f3f4f6',
-  borderColor: '#e5e7eb',
-  zIndex: 100,
-}; 
+} 
