@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowLeft, Share2, Download, Plus } from 'lucide-react-native';
@@ -23,18 +23,16 @@ export const ResultsScreen: React.FC = () => {
 
   if (!results) {
     return (
-      <SafeAreaView className="flex-1 bg-slate-900">
-        <LinearGradient
-          colors={['#0F172A', '#1E293B', '#334155']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="flex-1 justify-center items-center px-4"
-        >
-          <Text className="text-white text-lg text-center">
+      <LinearGradient
+        colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+          <Text style={styles.noResultsText}>
             No results available. Please calculate your nutrition plan first.
           </Text>
-        </LinearGradient>
-      </SafeAreaView>
+        </SafeAreaView>
+      </LinearGradient>
     );
   }
 
@@ -61,37 +59,38 @@ export const ResultsScreen: React.FC = () => {
   const calorieChartData = getCalorieChartData();
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-900">
-      <LinearGradient
-        colors={['#0F172A', '#1E293B', '#334155']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="flex-1"
-      >
-        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+    <LinearGradient
+      colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView 
+          contentContainerStyle={styles.container} 
+          showsVerticalScrollIndicator={false}
+        >
           {/* Header */}
-          <View className="p-4">
-            <View className="flex-row items-center justify-between mb-6">
+          <View style={styles.header}>
+            <View style={styles.headerContent}>
               <TouchableOpacity
                 onPress={handleBack}
-                className="flex-row items-center"
+                style={styles.backButton}
                 activeOpacity={0.8}
               >
-                <ArrowLeft size={24} color="#8B5CF6" className="mr-2" />
-                <Text className="text-white text-lg font-semibold">Back to Calculator</Text>
+                <ArrowLeft size={24} color="#059669" />
+                <Text style={styles.backText}>Back to Calculator</Text>
               </TouchableOpacity>
               
-              <View className="flex-row space-x-2">
+              <View style={styles.actionButtons}>
                 <TouchableOpacity
                   onPress={handleShare}
-                  className="p-2 rounded-full bg-slate-700/50"
+                  style={styles.actionButton}
                   activeOpacity={0.8}
                 >
-                  <Share2 size={20} color="#60A5FA" />
+                  <Share2 size={20} color="#3B82F6" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={handleDownload}
-                  className="p-2 rounded-full bg-slate-700/50"
+                  style={styles.actionButton}
                   activeOpacity={0.8}
                 >
                   <Download size={20} color="#10B981" />
@@ -99,16 +98,16 @@ export const ResultsScreen: React.FC = () => {
               </View>
             </View>
 
-            <View className="mb-6">
-              <Text className="text-white text-3xl font-bold mb-2">Your Results</Text>
-              <Text className="text-gray-400 text-base">
+            <View style={styles.titleSection}>
+              <Text style={styles.title}>Your Results</Text>
+              <Text style={styles.subtitle}>
                 Your personalized nutrition plan is ready
               </Text>
             </View>
           </View>
 
           {/* Results Card */}
-          <View className="px-4 mb-6">
+          <View style={styles.section}>
             <ResultsCard
               results={results}
               onAddToDiary={handleAddToDiary}
@@ -117,13 +116,11 @@ export const ResultsScreen: React.FC = () => {
           </View>
 
           {/* Charts Section */}
-          <View className="px-4 mb-6">
-            <Text className="text-white text-xl font-semibold mb-4 px-1">
-              Nutrition Breakdown
-            </Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Nutrition Breakdown</Text>
             
             {/* Macro Chart */}
-            <View className="mb-4">
+            <View style={styles.chartContainer}>
               <MacroPieChart
                 data={macroChartData}
                 title="Macronutrient Distribution"
@@ -133,7 +130,7 @@ export const ResultsScreen: React.FC = () => {
             </View>
 
             {/* Calorie Chart */}
-            <View className="mb-4">
+            <View style={styles.chartContainer}>
               <CalorieBarChart
                 data={calorieChartData}
                 title="Daily Calorie Target"
@@ -144,24 +141,20 @@ export const ResultsScreen: React.FC = () => {
           </View>
 
           {/* Meal Plan Section */}
-          <View className="px-4 mb-6">
-            <Text className="text-white text-xl font-semibold mb-4 px-1">
-              Sample Meal Plan
-            </Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Sample Meal Plan</Text>
             <MealPlanCard meals={sampleMealPlan} />
           </View>
 
           {/* Tips Section */}
-          <View className="px-4 mb-6">
-            <Text className="text-white text-xl font-semibold mb-4 px-1">
-              Success Tips
-            </Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Success Tips</Text>
             <TipsCard tips={successTips} />
           </View>
 
           {/* Action Buttons */}
-          <View className="px-4 mb-8">
-            <View className="space-y-3">
+          <View style={styles.section}>
+            <View style={styles.buttonContainer}>
               <GradientButton
                 title="Add to Food Diary"
                 onPress={handleAddToDiary}
@@ -195,34 +188,129 @@ export const ResultsScreen: React.FC = () => {
           </View>
 
           {/* Additional Information */}
-          <View className="px-4 mb-8">
-            <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-              <LinearGradient
-                colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className="absolute inset-0 rounded-2xl"
-              />
-              
-              <Text className="text-white text-lg font-semibold mb-3">📊 About Your Results</Text>
-              <View className="space-y-2">
-                <Text className="text-gray-300 text-sm">
-                  • <Text className="text-white font-medium">BMR:</Text> Your basal metabolic rate (calories burned at rest)
+          <View style={styles.section}>
+            <View style={styles.infoCard}>
+              <Text style={styles.infoTitle}>📊 About Your Results</Text>
+              <View style={styles.infoList}>
+                <Text style={styles.infoText}>
+                  • <Text style={styles.infoBold}>BMR:</Text> Your basal metabolic rate (calories burned at rest)
                 </Text>
-                <Text className="text-gray-300 text-sm">
-                  • <Text className="text-white font-medium">TDEE:</Text> Total daily energy expenditure (calories burned with activity)
+                <Text style={styles.infoText}>
+                  • <Text style={styles.infoBold}>TDEE:</Text> Total daily energy expenditure (calories burned with activity)
                 </Text>
-                <Text className="text-gray-300 text-sm">
-                  • <Text className="text-white font-medium">Macros:</Text> Optimized for your dietary preference and goals
+                <Text style={styles.infoText}>
+                  • <Text style={styles.infoBold}>Macros:</Text> Optimized for your dietary preference and goals
                 </Text>
-                <Text className="text-gray-300 text-sm">
-                  • <Text className="text-white font-medium">Water:</Text> Recommended daily hydration based on your weight
+                <Text style={styles.infoText}>
+                  • <Text style={styles.infoBold}>Water:</Text> Recommended daily hydration based on your weight
                 </Text>
               </View>
             </View>
           </View>
         </ScrollView>
-      </LinearGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    paddingBottom: 32,
+    gap: 16,
+  },
+  noResultsText: {
+    fontSize: 18,
+    color: '#374151',
+    textAlign: 'center',
+  },
+  header: {
+    marginBottom: 16,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#059669',
+    marginLeft: 8,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  actionButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  titleSection: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#64748b',
+  },
+  section: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 12,
+  },
+  chartContainer: {
+    marginBottom: 16,
+  },
+  buttonContainer: {
+    gap: 12,
+  },
+  infoCard: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  infoTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 12,
+  },
+  infoList: {
+    gap: 8,
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#374151',
+    lineHeight: 20,
+  },
+  infoBold: {
+    fontWeight: '600',
+    color: '#111827',
+  },
+}); 

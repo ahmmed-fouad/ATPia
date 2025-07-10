@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LucideIcon } from 'lucide-react-native';
 
@@ -28,108 +28,125 @@ export const GradientButton: React.FC<GradientButtonProps> = ({
     switch (variant) {
       case 'primary':
         return disabled 
-          ? ['#6B7280', '#4B5563'] 
-          : ['#8B5CF6', '#7C3AED'];
+          ? ['#d1d5db', '#9ca3af'] 
+          : ['#059669', '#047857'];
       case 'secondary':
         return disabled 
-          ? ['#6B7280', '#4B5563'] 
+          ? ['#d1d5db', '#9ca3af'] 
           : ['#3B82F6', '#2563EB'];
       case 'success':
         return disabled 
-          ? ['#6B7280', '#4B5563'] 
+          ? ['#d1d5db', '#9ca3af'] 
           : ['#10B981', '#059669'];
       case 'warning':
         return disabled 
-          ? ['#6B7280', '#4B5563'] 
+          ? ['#d1d5db', '#9ca3af'] 
           : ['#F59E0B', '#D97706'];
       case 'danger':
         return disabled 
-          ? ['#6B7280', '#4B5563'] 
+          ? ['#d1d5db', '#9ca3af'] 
           : ['#EF4444', '#DC2626'];
       default:
         return disabled 
-          ? ['#6B7280', '#4B5563'] 
-          : ['#8B5CF6', '#7C3AED'];
+          ? ['#d1d5db', '#9ca3af'] 
+          : ['#059669', '#047857'];
     }
   };
 
-  const getSizeClasses = () => {
+  const getSizeStyles = () => {
     switch (size) {
       case 'small':
-        return 'py-2 px-4';
+        return { paddingVertical: 8, paddingHorizontal: 16, fontSize: 14, iconSize: 16 };
       case 'medium':
-        return 'py-3 px-6';
+        return { paddingVertical: 12, paddingHorizontal: 24, fontSize: 16, iconSize: 20 };
       case 'large':
-        return 'py-4 px-8';
+        return { paddingVertical: 16, paddingHorizontal: 32, fontSize: 18, iconSize: 24 };
       default:
-        return 'py-3 px-6';
+        return { paddingVertical: 12, paddingHorizontal: 24, fontSize: 16, iconSize: 20 };
     }
   };
 
-  const getTextSize = () => {
-    switch (size) {
-      case 'small':
-        return 'text-sm';
-      case 'medium':
-        return 'text-base';
-      case 'large':
-        return 'text-lg';
-      default:
-        return 'text-base';
-    }
-  };
-
-  const getIconSize = () => {
-    switch (size) {
-      case 'small':
-        return 16;
-      case 'medium':
-        return 20;
-      case 'large':
-        return 24;
-      default:
-        return 20;
-    }
-  };
+  const sizeConfig = getSizeStyles();
 
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
-      className={`rounded-xl ${getSizeClasses()} ${fullWidth ? 'w-full' : ''}`}
+      style={[
+        styles.button,
+        {
+          paddingVertical: sizeConfig.paddingVertical,
+          paddingHorizontal: sizeConfig.paddingHorizontal,
+          width: fullWidth ? '100%' : undefined,
+        }
+      ]}
       activeOpacity={disabled ? 1 : 0.8}
     >
       <LinearGradient
         colors={getGradientColors() as any}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="absolute inset-0 rounded-xl"
+        style={styles.gradient}
       />
       
-      <View className="flex-row items-center justify-center">
+      <View style={styles.content}>
         {Icon && iconPosition === 'left' && (
           <Icon 
-            size={getIconSize()} 
+            size={sizeConfig.iconSize} 
             color="white" 
-            className="mr-2" 
+            style={{ marginRight: 8 }}
           />
         )}
         
         <Text 
-          className={`font-semibold text-white ${getTextSize()}`}
-          style={{ opacity: disabled ? 0.6 : 1 }}
+          style={[
+            styles.text,
+            { 
+              fontSize: sizeConfig.fontSize,
+              opacity: disabled ? 0.6 : 1 
+            }
+          ]}
         >
           {title}
         </Text>
         
         {Icon && iconPosition === 'right' && (
           <Icon 
-            size={getIconSize()} 
+            size={sizeConfig.iconSize} 
             color="white" 
-            className="ml-2" 
+            style={{ marginLeft: 8 }}
           />
         )}
       </View>
     </TouchableOpacity>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 12,
+    position: 'relative',
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 12,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontWeight: '600',
+    color: 'white',
+  },
+}); 

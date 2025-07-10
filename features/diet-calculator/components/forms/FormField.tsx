@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronDown } from 'lucide-react-native';
 
@@ -61,15 +61,15 @@ export const FormField: React.FC<FormFieldProps> = ({
       return (
         <TouchableOpacity
           onPress={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex-row items-center justify-between bg-slate-700/50 rounded-xl px-4 py-3 border border-slate-600/50"
+          style={styles.selectInput}
           activeOpacity={0.8}
         >
-          <Text className="text-white flex-1">
+          <Text style={styles.selectText}>
             {getSelectedOptionLabel()}
           </Text>
           <ChevronDown 
             size={20} 
-            color="#9CA3AF" 
+            color="#64748b" 
             style={{ transform: [{ rotate: isDropdownOpen ? '180deg' : '0deg' }] }}
           />
         </TouchableOpacity>
@@ -77,7 +77,7 @@ export const FormField: React.FC<FormFieldProps> = ({
     }
 
     return (
-      <View className="flex-row items-center">
+      <View style={styles.inputContainer}>
         <TextInput
           value={value?.toString() || ''}
           onChangeText={handleTextChange}
@@ -85,47 +85,33 @@ export const FormField: React.FC<FormFieldProps> = ({
           placeholderTextColor="#9CA3AF"
           keyboardType={keyboardType}
           maxLength={maxLength}
-          className="flex-1 bg-slate-700/50 rounded-xl px-4 py-3 text-white border border-slate-600/50"
+          style={styles.textInput}
         />
         {unit && (
-          <Text className="text-gray-400 ml-2 font-medium">{unit}</Text>
+          <Text style={styles.unitText}>{unit}</Text>
         )}
       </View>
     );
   };
 
   return (
-    <View className="mb-4">
-      <View className="flex-row items-center mb-2">
-        <Text className="text-white font-semibold text-base">{label}</Text>
-        {required && <Text className="text-red-400 ml-1">*</Text>}
+    <View style={styles.container}>
+      <View style={styles.labelContainer}>
+        <Text style={styles.label}>{label}</Text>
+        {required && <Text style={styles.required}>*</Text>}
       </View>
       
-      <View className="relative">
-        <LinearGradient
-          colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="absolute inset-0 rounded-xl"
-        />
-        
+      <View style={styles.inputWrapper}>
         {renderInput()}
         
         {error && (
-          <Text className="text-red-400 text-xs mt-1 ml-1">{error}</Text>
+          <Text style={styles.errorText}>{error}</Text>
         )}
       </View>
 
       {/* Dropdown Options */}
       {type === 'select' && isDropdownOpen && options && (
-        <View className="mt-2 bg-slate-800/80 rounded-xl border border-slate-700/50 max-h-40">
-          <LinearGradient
-            colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="absolute inset-0 rounded-xl"
-          />
-          
+        <View style={styles.dropdown}>
           {options.map((option, index) => (
             <TouchableOpacity
               key={index}
@@ -133,12 +119,15 @@ export const FormField: React.FC<FormFieldProps> = ({
                 onSelectOption?.(option.value);
                 setIsDropdownOpen(false);
               }}
-              className="px-4 py-3 border-b border-slate-700/30 last:border-b-0"
+              style={[
+                styles.dropdownItem,
+                index === options.length - 1 && styles.dropdownItemLast
+              ]}
               activeOpacity={0.8}
             >
-              <Text className="text-white font-medium">{option.label}</Text>
+              <Text style={styles.dropdownItemText}>{option.label}</Text>
               {option.description && (
-                <Text className="text-gray-400 text-xs mt-1">{option.description}</Text>
+                <Text style={styles.dropdownItemDescription}>{option.description}</Text>
               )}
             </TouchableOpacity>
           ))}
@@ -146,4 +135,103 @@ export const FormField: React.FC<FormFieldProps> = ({
       )}
     </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 16,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  required: {
+    fontSize: 16,
+    color: '#ef4444',
+    marginLeft: 4,
+  },
+  inputWrapper: {
+    position: 'relative',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textInput: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#111827',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  unitText: {
+    fontSize: 16,
+    color: '#64748b',
+    fontWeight: '500',
+    marginLeft: 8,
+  },
+  selectInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f9fafb',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  selectText: {
+    fontSize: 16,
+    color: '#111827',
+    flex: 1,
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#ef4444',
+    marginTop: 4,
+    marginLeft: 4,
+  },
+  dropdown: {
+    marginTop: 8,
+    backgroundColor: 'rgba(255,255,255,0.98)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    maxHeight: 160,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  dropdownItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  dropdownItemLast: {
+    borderBottomWidth: 0,
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#111827',
+    fontWeight: '500',
+  },
+  dropdownItemDescription: {
+    fontSize: 12,
+    color: '#64748b',
+    marginTop: 2,
+  },
+}); 

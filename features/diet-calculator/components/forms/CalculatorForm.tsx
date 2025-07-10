@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Calculator, User, Activity, Target, Utensils } from 'lucide-react-native';
 import { useCalculator } from '../../hooks/useCalculator';
@@ -20,23 +20,16 @@ export const CalculatorForm: React.FC = () => {
   };
 
   return (
-    <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-      <View className="p-4 space-y-6">
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
         {/* Personal Information Section */}
-        <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-          <LinearGradient
-            colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="absolute inset-0 rounded-2xl"
-          />
-          
-          <View className="flex-row items-center mb-4">
-            <User size={20} color="#8B5CF6" className="mr-2" />
-            <Text className="text-white text-lg font-semibold">Personal Information</Text>
+        <View style={styles.formSection}>
+          <View style={styles.sectionHeader}>
+            <User size={20} color="#059669" />
+            <Text style={styles.sectionTitle}>Personal Information</Text>
           </View>
 
-          <View className="space-y-4">
+          <View style={styles.fieldsContainer}>
             <FormField
               label="Age"
               value={form.age}
@@ -96,20 +89,13 @@ export const CalculatorForm: React.FC = () => {
         </View>
 
         {/* Activity & Goals Section */}
-        <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-          <LinearGradient
-            colors={['rgba(59, 130, 246, 0.1)', 'rgba(96, 165, 250, 0.1)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="absolute inset-0 rounded-2xl"
-          />
-          
-          <View className="flex-row items-center mb-4">
-            <Activity size={20} color="#3B82F6" className="mr-2" />
-            <Text className="text-white text-lg font-semibold">Activity & Goals</Text>
+        <View style={styles.formSection}>
+          <View style={styles.sectionHeader}>
+            <Activity size={20} color="#3B82F6" />
+            <Text style={styles.sectionTitle}>Activity & Goals</Text>
           </View>
 
-          <View className="space-y-4">
+          <View style={styles.fieldsContainer}>
             <FormField
               label="Activity Level"
               value={form.activity}
@@ -145,20 +131,13 @@ export const CalculatorForm: React.FC = () => {
         </View>
 
         {/* Dietary Preferences Section */}
-        <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-          <LinearGradient
-            colors={['rgba(251, 191, 36, 0.1)', 'rgba(245, 158, 11, 0.1)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="absolute inset-0 rounded-2xl"
-          />
-          
-          <View className="flex-row items-center mb-4">
-            <Utensils size={20} color="#FBBF24" className="mr-2" />
-            <Text className="text-white text-lg font-semibold">Dietary Preferences</Text>
+        <View style={styles.formSection}>
+          <View style={styles.sectionHeader}>
+            <Utensils size={20} color="#F59E0B" />
+            <Text style={styles.sectionTitle}>Dietary Preferences</Text>
           </View>
 
-          <View className="space-y-4">
+          <View style={styles.fieldsContainer}>
             <FormField
               label="Dietary Preference"
               value={form.dietaryPref}
@@ -200,20 +179,13 @@ export const CalculatorForm: React.FC = () => {
         </View>
 
         {/* Optional Measurements Section */}
-        <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-          <LinearGradient
-            colors={['rgba(16, 185, 129, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="absolute inset-0 rounded-2xl"
-          />
-          
-          <View className="flex-row items-center mb-4">
-            <Calculator size={20} color="#10B981" className="mr-2" />
-            <Text className="text-white text-lg font-semibold">Optional Measurements</Text>
+        <View style={styles.formSection}>
+          <View style={styles.sectionHeader}>
+            <Calculator size={20} color="#10B981" />
+            <Text style={styles.sectionTitle}>Optional Measurements</Text>
           </View>
 
-          <View className="space-y-4">
+          <View style={styles.fieldsContainer}>
             <FormField
               label="Body Fat % (optional)"
               value={form.bodyFat || ''}
@@ -257,4 +229,35 @@ export const CalculatorForm: React.FC = () => {
       </View>
     </ScrollView>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    gap: 16,
+  },
+  formSection: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+    marginLeft: 8,
+  },
+  fieldsContainer: {
+    gap: 16,
+  },
+}); 

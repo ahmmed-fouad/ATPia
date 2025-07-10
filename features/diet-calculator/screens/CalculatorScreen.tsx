@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Calculator, ArrowRight, RefreshCw } from 'lucide-react-native';
@@ -33,24 +33,25 @@ export const CalculatorScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-900">
-      <LinearGradient
-        colors={['#0F172A', '#1E293B', '#334155']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="flex-1"
-      >
-        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+    <LinearGradient
+      colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView 
+          contentContainerStyle={styles.container} 
+          showsVerticalScrollIndicator={false}
+        >
           {/* Header */}
-          <View className="p-4">
-            <View className="flex-row items-center justify-between mb-6">
-              <View className="flex-row items-center">
-                <View className="w-12 h-12 bg-purple-600/20 rounded-xl items-center justify-center mr-3">
-                  <Calculator size={24} color="#8B5CF6" />
+          <View style={styles.header}>
+            <View style={styles.headerContent}>
+              <View style={styles.headerLeft}>
+                <View style={styles.headerIcon}>
+                  <Calculator size={24} color="#059669" />
                 </View>
                 <View>
-                  <Text className="text-white text-2xl font-bold">Diet Calculator</Text>
-                  <Text className="text-gray-400 text-sm">
+                  <Text style={styles.title}>Diet Calculator</Text>
+                  <Text style={styles.subtitle}>
                     Calculate your personalized nutrition plan
                   </Text>
                 </View>
@@ -58,46 +59,28 @@ export const CalculatorScreen: React.FC = () => {
               
               <TouchableOpacity
                 onPress={handleResetPress}
-                className="p-2 rounded-full bg-slate-700/50"
+                style={styles.resetButton}
                 activeOpacity={0.8}
               >
-                <RefreshCw size={20} color="#9CA3AF" />
+                <RefreshCw size={20} color="#64748b" />
               </TouchableOpacity>
             </View>
 
             {/* Quick Stats */}
-            <View className="flex-row space-x-3 mb-6">
-              <View className="flex-1 bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                <LinearGradient
-                  colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  className="absolute inset-0 rounded-xl"
-                />
-                <Text className="text-white text-lg font-bold">{form.age}</Text>
-                <Text className="text-gray-400 text-xs">Age</Text>
+            <View style={styles.statsRow}>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>{form.age}</Text>
+                <Text style={styles.statLabel}>Age</Text>
               </View>
               
-              <View className="flex-1 bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                <LinearGradient
-                  colors={['rgba(59, 130, 246, 0.1)', 'rgba(96, 165, 250, 0.1)']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  className="absolute inset-0 rounded-xl"
-                />
-                <Text className="text-white text-lg font-bold">{form.height}cm</Text>
-                <Text className="text-gray-400 text-xs">Height</Text>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>{form.height}cm</Text>
+                <Text style={styles.statLabel}>Height</Text>
               </View>
               
-              <View className="flex-1 bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                <LinearGradient
-                  colors={['rgba(251, 191, 36, 0.1)', 'rgba(245, 158, 11, 0.1)']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  className="absolute inset-0 rounded-xl"
-                />
-                <Text className="text-white text-lg font-bold">{form.weight}kg</Text>
-                <Text className="text-gray-400 text-xs">Weight</Text>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>{form.weight}kg</Text>
+                <Text style={styles.statLabel}>Weight</Text>
               </View>
             </View>
           </View>
@@ -106,7 +89,7 @@ export const CalculatorScreen: React.FC = () => {
           <CalculatorForm />
 
           {/* Calculate Button */}
-          <View className="p-4">
+          <View style={styles.buttonSection}>
             <GradientButton
               title={isLoading ? "Calculating..." : "Calculate Nutrition Plan"}
               onPress={handleCalculatePress}
@@ -120,12 +103,12 @@ export const CalculatorScreen: React.FC = () => {
 
             {/* Validation Errors */}
             {Object.keys(formValidation.errors).length > 0 && (
-              <View className="mt-4 p-3 bg-red-600/20 rounded-xl border border-red-600/30">
-                <Text className="text-red-400 text-sm font-medium mb-2">
+              <View style={styles.errorCard}>
+                <Text style={styles.errorTitle}>
                   Please fix the following errors:
                 </Text>
                 {Object.entries(formValidation.errors).map(([field, error]) => (
-                  <Text key={field} className="text-red-300 text-xs">
+                  <Text key={field} style={styles.errorText}>
                     • {error}
                   </Text>
                 ))}
@@ -134,44 +117,37 @@ export const CalculatorScreen: React.FC = () => {
 
             {/* Results Preview */}
             {results && !showResults && (
-              <View className="mt-6 bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-                <LinearGradient
-                  colors={['rgba(16, 185, 129, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  className="absolute inset-0 rounded-2xl"
-                />
-                
-                <View className="flex-row items-center justify-between mb-4">
+              <View style={styles.resultsPreview}>
+                <View style={styles.resultsHeader}>
                   <View>
-                    <Text className="text-white text-lg font-semibold">Results Ready!</Text>
-                    <Text className="text-gray-400 text-sm">
+                    <Text style={styles.resultsTitle}>Results Ready!</Text>
+                    <Text style={styles.resultsSubtitle}>
                       Your personalized nutrition plan is calculated
                     </Text>
                   </View>
-                  <View className="w-12 h-12 bg-green-600/20 rounded-full items-center justify-center">
-                    <Text className="text-green-400 text-xl">✓</Text>
+                  <View style={styles.successIcon}>
+                    <Text style={styles.checkmark}>✓</Text>
                   </View>
                 </View>
 
-                <View className="flex-row space-x-4 mb-4">
-                  <View className="flex-1 items-center">
-                    <Text className="text-white text-2xl font-bold">
+                <View style={styles.resultsStats}>
+                  <View style={styles.resultStat}>
+                    <Text style={styles.resultValue}>
                       {results.calories.toLocaleString()}
                     </Text>
-                    <Text className="text-gray-400 text-xs">Calories</Text>
+                    <Text style={styles.resultLabel}>Calories</Text>
                   </View>
-                  <View className="flex-1 items-center">
-                    <Text className="text-white text-2xl font-bold">
+                  <View style={styles.resultStat}>
+                    <Text style={styles.resultValue}>
                       {results.protein}g
                     </Text>
-                    <Text className="text-gray-400 text-xs">Protein</Text>
+                    <Text style={styles.resultLabel}>Protein</Text>
                   </View>
-                  <View className="flex-1 items-center">
-                    <Text className="text-white text-2xl font-bold">
+                  <View style={styles.resultStat}>
+                    <Text style={styles.resultValue}>
                       {results.carbs}g
                     </Text>
-                    <Text className="text-gray-400 text-xs">Carbs</Text>
+                    <Text style={styles.resultLabel}>Carbs</Text>
                   </View>
                 </View>
 
@@ -189,34 +165,211 @@ export const CalculatorScreen: React.FC = () => {
           </View>
 
           {/* Tips Section */}
-          <View className="p-4">
-            <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-              <LinearGradient
-                colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className="absolute inset-0 rounded-2xl"
-              />
-              
-              <Text className="text-white text-lg font-semibold mb-3">💡 Tips</Text>
-              <View className="space-y-2">
-                <Text className="text-gray-300 text-sm">
+          <View style={styles.tipsSection}>
+            <View style={styles.tipsCard}>
+              <Text style={styles.tipsTitle}>💡 Tips</Text>
+              <View style={styles.tipsList}>
+                <Text style={styles.tipText}>
                   • Fill in all required fields for accurate calculations
                 </Text>
-                <Text className="text-gray-300 text-sm">
+                <Text style={styles.tipText}>
                   • Be honest about your activity level for best results
                 </Text>
-                <Text className="text-gray-300 text-sm">
+                <Text style={styles.tipText}>
                   • Consider your dietary preferences and allergies
                 </Text>
-                <Text className="text-gray-300 text-sm">
+                <Text style={styles.tipText}>
                   • Results are based on scientific formulas (Mifflin-St Jeor)
                 </Text>
               </View>
             </View>
           </View>
         </ScrollView>
-      </LinearGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    paddingBottom: 32,
+    gap: 16,
+  },
+  header: {
+    marginBottom: 16,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  headerIcon: {
+    width: 48,
+    height: 48,
+    backgroundColor: '#05966920',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 2,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#64748b',
+  },
+  resetButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+  buttonSection: {
+    marginBottom: 16,
+  },
+  errorCard: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#fef2f2',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#fecaca',
+  },
+  errorTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#dc2626',
+    marginBottom: 8,
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#ef4444',
+  },
+  resultsPreview: {
+    marginTop: 16,
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  resultsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  resultsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 2,
+  },
+  resultsSubtitle: {
+    fontSize: 14,
+    color: '#64748b',
+  },
+  successIcon: {
+    width: 48,
+    height: 48,
+    backgroundColor: '#10B98120',
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkmark: {
+    fontSize: 20,
+    color: '#10B981',
+    fontWeight: 'bold',
+  },
+  resultsStats: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 16,
+  },
+  resultStat: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  resultValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  resultLabel: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+  tipsSection: {
+    marginBottom: 16,
+  },
+  tipsCard: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  tipsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 12,
+  },
+  tipsList: {
+    gap: 8,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#374151',
+    lineHeight: 20,
+  },
+}); 
