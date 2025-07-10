@@ -1,5 +1,5 @@
 import React from 'react';
-import { GroceryListScreen } from '../../../features/grocery-list';
+import { GroceryListScreen } from '../../../features/nutration/grocery-list/screens/GroceryListScreen';
 
 const GroceryList = () => {
   return <GroceryListScreen />;

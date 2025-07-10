@@ -21,7 +21,6 @@ export const BlogPostModal: React.FC<BlogPostModalProps> = ({
   onClose, 
   chartData 
 }) => {
-  console.log('BlogPostModal - post:', post);
   if (!post || !visible) return null;
 
   const formatDate = (dateString: string) => {

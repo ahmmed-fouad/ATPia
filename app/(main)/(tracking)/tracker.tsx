@@ -1,4 +1,4 @@
-import {TrackerScreen} from '../../../features/tracking/screens';
+import {TrackerScreen} from '../../../features/trackings/tracking/screens';
 
 export default function Tracker() {
   return <TrackerScreen />;

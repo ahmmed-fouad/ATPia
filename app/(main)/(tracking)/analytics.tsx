@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnalyticsDashboard } from '../../../features/analytics/screens/AnalyticsDashboard';
+import { AnalyticsDashboard } from '../../../features/trackings/analytics/screens/AnalyticsDashboard';
 
 const Analytics = () => {
   return <AnalyticsDashboard />;
