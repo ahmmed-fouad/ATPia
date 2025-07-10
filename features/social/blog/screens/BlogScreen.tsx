@@ -19,6 +19,9 @@ export const BlogScreen: React.FC = () => {
     refetch,
   } = useBlog();
 
+  // Debug log for selectedPost
+  console.log('BlogScreen - selectedPost:', selectedPost);
+
   return (
     <LinearGradient
       colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}

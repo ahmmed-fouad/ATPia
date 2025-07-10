@@ -22,6 +22,7 @@ export const useBlog = () => {
   }, []);
 
   const handlePostPress = (post: any) => {
+    console.log('handlePostPress - selected post:', post);
     setSelectedPost(post);
     setModalVisible(true);
   };

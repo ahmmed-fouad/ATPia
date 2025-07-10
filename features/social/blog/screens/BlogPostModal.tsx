@@ -21,6 +21,7 @@ export const BlogPostModal: React.FC<BlogPostModalProps> = ({
   onClose, 
   chartData 
 }) => {
+  console.log('BlogPostModal - post:', post);
   if (!post || !visible) return null;
 
   const formatDate = (dateString: string) => {
@@ -56,14 +57,17 @@ export const BlogPostModal: React.FC<BlogPostModalProps> = ({
           <Text style={styles.closeButtonText}>×</Text>
         </TouchableOpacity>
 
-        <ScrollView 
-          style={styles.scrollView}
+        <ScrollView
+          style={{}}
+          contentContainerStyle={{ paddingBottom: 24 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Cover Image */}
           <Image
-            source={{ 
-              uri: post.cover_image || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400'
+            source={{
+              uri:
+                post.cover_image ||
+                'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400',
             }}
             style={styles.coverImage}
             resizeMode="cover"
@@ -72,19 +76,13 @@ export const BlogPostModal: React.FC<BlogPostModalProps> = ({
           {/* Content */}
           <View style={styles.content}>
             <Text style={styles.title}>{post.title}</Text>
-            
+
             <View style={styles.metaInfo}>
-              <Text style={styles.author}>
-                by {getAuthorName()}
-              </Text>
-              <Text style={styles.date}>
-                {formatDate(post.published_at)}
-              </Text>
+              <Text style={styles.author}>by {getAuthorName()}</Text>
+              <Text style={styles.date}>{formatDate(post.published_at)}</Text>
             </View>
 
-            <Text style={styles.description}>
-              {post.description}
-            </Text>
+            <Text style={styles.description}>{post.description}</Text>
 
             {/* Read Full Article Button */}
             <TouchableOpacity
