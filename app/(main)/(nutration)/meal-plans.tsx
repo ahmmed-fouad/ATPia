@@ -1,11 +1,8 @@
-import { View, Text } from "react-native";
+import React from 'react';
+import { MealPlanScreen } from '../../../features/meal-plans/screens/MealPlanScreen';
 
-const MailPlans = () => {
-  return (
-    <View>
-      <Text>MailPlans</Text>
-    </View>
-  );
+const MealPlans = () => {
+  return <MealPlanScreen />;
 };
 
-export default MailPlans;
+export default MealPlans;
