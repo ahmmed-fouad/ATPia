@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Platform } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { LinearGradient } from 'expo-linear-gradient';
 import { ChartData } from '../../types';
 
 const { width } = Dimensions.get('window');
@@ -14,48 +13,34 @@ interface ProgressChartProps {
 
 export const ProgressChart: React.FC<ProgressChartProps> = ({ data, title, subtitle }) => {
   const chartConfig = {
-    backgroundGradientFrom: '#1E293B',
-    backgroundGradientTo: '#334155',
+    backgroundGradientFrom: '#ffffff',
+    backgroundGradientTo: '#ffffff',
     decimalPlaces: 1,
-    color: (opacity = 1) => `rgba(139, 92, 246, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    color: (opacity = 1) => `rgba(5, 150, 105, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(71, 85, 105, ${opacity})`,
     style: {
       borderRadius: 16,
     },
     propsForDots: {
       r: '6',
       strokeWidth: '2',
-      stroke: '#8B5CF6',
+      stroke: '#059669',
     },
   };
 
   return (
-    <View className="bg-slate-800 rounded-3xl p-4 mb-4">
-      <LinearGradient
-        colors={['rgba(139, 92, 246, 0.1)', 'rgba(6, 182, 212, 0.1)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="absolute inset-0 rounded-3xl"
-      />
-      
-      <View className="mb-4">
-        <Text className="text-white text-lg font-bold mb-1">{title}</Text>
-        {subtitle && (
-          <Text className="text-gray-300 text-sm">{subtitle}</Text>
-        )}
-      </View>
-
+    <View style={styles.container}>
       <LineChart
         data={{
           labels: data.labels,
           datasets: data.datasets.map((dataset, index) => ({
             data: dataset.data,
-            color: (opacity = 1) => dataset.color || `rgba(139, 92, 246, ${opacity})`,
+            color: (opacity = 1) => dataset.color || `rgba(5, 150, 105, ${opacity})`,
             strokeWidth: dataset.strokeWidth || 3,
           })),
         }}
-        width={width - 48}
-        height={220}
+        width={width - 64}
+        height={200}
         chartConfig={chartConfig}
         bezier
         style={{
@@ -78,4 +63,17 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ data, title, subti
       />
     </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 12,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+}); 
