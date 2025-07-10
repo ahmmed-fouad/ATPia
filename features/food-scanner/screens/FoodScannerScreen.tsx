@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Camera, Barcode, Search, History, ArrowRight } from 'lucide-react-native';
+import { Camera, Barcode, Search, History, ArrowRight, Upload, Image as ImageIcon } from 'lucide-react-native';
 import { useFoodScanner } from '../hooks/useFoodScanner';
 import { ImageUploadButton } from '../components/ui/ImageUploadButton';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
@@ -59,42 +59,41 @@ export const FoodScannerScreen: React.FC = () => {
 
   if (isProcessing) {
     return (
-      <SafeAreaView className="flex-1 bg-slate-900">
-        <LinearGradient
-          colors={['#0F172A', '#1E293B', '#334155']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="flex-1 justify-center items-center px-4"
-        >
+      <LinearGradient
+        colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
           <LoadingSpinner 
             message="Analyzing your food..." 
             size="large"
           />
-        </LinearGradient>
-      </SafeAreaView>
+        </SafeAreaView>
+      </LinearGradient>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-900">
-      <LinearGradient
-        colors={['#0F172A', '#1E293B', '#334155']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="flex-1"
-      >
-        <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+    <LinearGradient
+      colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView 
+          contentContainerStyle={styles.container} 
+          showsVerticalScrollIndicator={false}
+        >
           {/* Header */}
-          <View className="mb-6">
-            <Text className="text-white text-3xl font-bold mb-2">Food Scanner</Text>
-            <Text className="text-gray-400 text-base">
+          <View style={styles.header}>
+            <Text style={styles.title}>Food Scanner</Text>
+            <Text style={styles.subtitle}>
               Scan food items to get detailed nutrition information
             </Text>
           </View>
 
           {/* Image Upload */}
-          <View className="mb-6">
-            <Text className="text-white text-lg font-semibold mb-3">📸 Image Scanning</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>📸 Image Scanning</Text>
             <ImageUploadButton
               imageUri={imageUri}
               onCameraPress={handleCameraPress}
@@ -105,85 +104,74 @@ export const FoodScannerScreen: React.FC = () => {
           </View>
 
           {/* Barcode Scanner */}
-          <View className="mb-6">
-            <Text className="text-white text-lg font-semibold mb-3">📊 Barcode Scanner</Text>
-            <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-              <LinearGradient
-                colors={['rgba(96, 165, 250, 0.1)', 'rgba(139, 92, 246, 0.1)']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className="absolute inset-0 rounded-2xl"
-              />
-              
-              <View className="flex-row items-center mb-3">
-                <Barcode size={20} color="#60A5FA" className="mr-2" />
-                <Text className="text-white font-medium">Scan Product Barcode</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>📊 Barcode Scanner</Text>
+            <View style={styles.inputCard}>
+              <View style={styles.inputHeader}>
+                <Barcode size={20} color="#059669" />
+                <Text style={styles.inputTitle}>Scan Product Barcode</Text>
               </View>
               
-              <View className="flex-row space-x-2">
+              <View style={styles.inputRow}>
                 <TextInput
                   value={barcode}
                   onChangeText={setBarcode}
                   placeholder="Enter barcode number"
                   placeholderTextColor="#9CA3AF"
-                  className="flex-1 bg-slate-700/50 rounded-xl px-4 py-3 text-white border border-slate-600/50"
+                  style={styles.textInput}
                   keyboardType="numeric"
                 />
                 <TouchableOpacity
                   onPress={handleBarcodeSubmit}
                   disabled={!barcode.trim()}
-                  className={`px-4 py-3 rounded-xl flex-row items-center ${
-                    barcode.trim() ? 'bg-blue-600' : 'bg-gray-600'
-                  }`}
+                  style={[
+                    styles.searchButton,
+                    !barcode.trim() && styles.searchButtonDisabled
+                  ]}
                   activeOpacity={0.8}
                 >
                   <Search size={20} color="white" />
                 </TouchableOpacity>
               </View>
               
-              <Text className="text-gray-400 text-xs mt-2">
+              <Text style={styles.inputHint}>
                 Enter the barcode number from any food product
               </Text>
             </View>
           </View>
 
           {/* Manual Input */}
-          <View className="mb-6">
-            <Text className="text-white text-lg font-semibold mb-3">✍️ Manual Input</Text>
-            <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-              <LinearGradient
-                colors={['rgba(251, 191, 36, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className="absolute inset-0 rounded-2xl"
-              />
-              
-              <View className="flex-row items-center mb-3">
-                <Search size={20} color="#FBBF24" className="mr-2" />
-                <Text className="text-white font-medium">Search Food Database</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>✍️ Manual Input</Text>
+            <View style={styles.inputCard}>
+              <View style={styles.inputHeader}>
+                <Search size={20} color="#F59E0B" />
+                <Text style={styles.inputTitle}>Search Food Database</Text>
               </View>
               
-              <View className="flex-row space-x-2">
+              <View style={styles.inputRow}>
                 <TextInput
                   value={manualInput}
                   onChangeText={setManualInput}
                   placeholder="Enter food name"
                   placeholderTextColor="#9CA3AF"
-                  className="flex-1 bg-slate-700/50 rounded-xl px-4 py-3 text-white border border-slate-600/50"
+                  style={styles.textInput}
                 />
                 <TouchableOpacity
                   onPress={handleManualSubmit}
                   disabled={!manualInput.trim()}
-                  className={`px-4 py-3 rounded-xl flex-row items-center ${
-                    manualInput.trim() ? 'bg-yellow-600' : 'bg-gray-600'
-                  }`}
+                  style={[
+                    styles.searchButton,
+                    { backgroundColor: '#F59E0B' },
+                    !manualInput.trim() && styles.searchButtonDisabled
+                  ]}
                   activeOpacity={0.8}
                 >
                   <Search size={20} color="white" />
                 </TouchableOpacity>
               </View>
               
-              <Text className="text-gray-400 text-xs mt-2">
+              <Text style={styles.inputHint}>
                 Search our database for common foods
               </Text>
             </View>
@@ -191,12 +179,12 @@ export const FoodScannerScreen: React.FC = () => {
 
           {/* Recent Scans */}
           {recentScans.length > 0 && (
-            <View className="mb-8">
-              <View className="flex-row items-center justify-between mb-3">
-                <Text className="text-white text-lg font-semibold">Recent Scans</Text>
-                <TouchableOpacity className="flex-row items-center">
-                  <Text className="text-blue-400 text-sm mr-1">View All</Text>
-                  <ArrowRight size={16} color="#60A5FA" />
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Recent Scans</Text>
+                <TouchableOpacity style={styles.viewAllButton}>
+                  <Text style={styles.viewAllText}>View All</Text>
+                  <ArrowRight size={16} color="#059669" />
                 </TouchableOpacity>
               </View>
               
@@ -204,31 +192,26 @@ export const FoodScannerScreen: React.FC = () => {
                 {recentScans.slice(0, 5).map((food, index) => (
                   <TouchableOpacity
                     key={food.id}
-                    className="bg-slate-800/50 rounded-xl p-3 mr-3 border border-slate-700/50 min-w-[120]"
+                    style={styles.recentScanCard}
                     activeOpacity={0.8}
                   >
-                    <LinearGradient
-                      colors={['rgba(52, 211, 153, 0.1)', 'rgba(96, 165, 250, 0.1)']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      className="absolute inset-0 rounded-xl"
-                    />
-                    
-                    <Text className="text-white font-medium text-sm mb-1" numberOfLines={1}>
+                    <Text style={styles.foodName} numberOfLines={1}>
                       {food.name}
                     </Text>
-                    <Text className="text-gray-400 text-xs mb-2">
+                    <Text style={styles.foodDate}>
                       {food.formattedDate}
                     </Text>
-                    <View className="flex-row items-center">
+                    <View style={styles.scoreSection}>
                       <View 
-                        className="w-2 h-2 rounded-full mr-1"
-                        style={{ 
-                          backgroundColor: food.nutritionScore >= 80 ? '#10B981' : 
-                                        food.nutritionScore >= 60 ? '#F59E0B' : '#EF4444' 
-                        }}
+                        style={[
+                          styles.scoreDot,
+                          { 
+                            backgroundColor: food.nutritionScore >= 80 ? '#10B981' : 
+                                          food.nutritionScore >= 60 ? '#F59E0B' : '#EF4444' 
+                          }
+                        ]}
                       />
-                      <Text className="text-gray-300 text-xs">
+                      <Text style={styles.scoreText}>
                         Score: {food.nutritionScore}
                       </Text>
                     </View>
@@ -239,34 +222,187 @@ export const FoodScannerScreen: React.FC = () => {
           )}
 
           {/* Quick Tips */}
-          <View className="mb-8">
-            <Text className="text-white text-lg font-semibold mb-3">💡 Quick Tips</Text>
-            <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
-              <LinearGradient
-                colors={['rgba(139, 92, 246, 0.1)', 'rgba(34, 197, 94, 0.1)']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className="absolute inset-0 rounded-2xl"
-              />
-              
-              <View className="space-y-2">
-                <Text className="text-gray-300 text-sm">
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>💡 Quick Tips</Text>
+            <View style={styles.tipsCard}>
+              <View style={styles.tipsList}>
+                <Text style={styles.tipText}>
                   • 📸 Take clear, well-lit photos for best results
                 </Text>
-                <Text className="text-gray-300 text-sm">
+                <Text style={styles.tipText}>
                   • 📊 Barcode scanning provides the most accurate data
                 </Text>
-                <Text className="text-gray-300 text-sm">
+                <Text style={styles.tipText}>
                   • 🔍 Use manual search for homemade or restaurant foods
                 </Text>
-                <Text className="text-gray-300 text-sm">
+                <Text style={styles.tipText}>
                   • ⚠️ Always check allergen warnings before consuming
                 </Text>
               </View>
             </View>
           </View>
         </ScrollView>
-      </LinearGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    paddingBottom: 32,
+    gap: 16,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#059669',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    marginBottom: 4,
+    letterSpacing: 0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#64748b',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    textAlign: 'center',
+    fontWeight: '500',
+    letterSpacing: 0.2,
+  },
+  section: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: 12,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  viewAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  viewAllText: {
+    fontSize: 14,
+    color: '#059669',
+    fontWeight: '600',
+    marginRight: 4,
+  },
+  inputCard: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  inputHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  inputTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginLeft: 8,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  textInput: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#111827',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  searchButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchButtonDisabled: {
+    backgroundColor: '#d1d5db',
+  },
+  inputHint: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+  recentScanCard: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 12,
+    padding: 12,
+    marginRight: 12,
+    minWidth: 120,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  foodName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  foodDate: {
+    fontSize: 12,
+    color: '#64748b',
+    marginBottom: 8,
+  },
+  scoreSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  scoreDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 6,
+  },
+  scoreText: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+  tipsCard: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  tipsList: {
+    gap: 8,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#374151',
+    lineHeight: 20,
+  },
+}); 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Camera, Image as ImageIcon, Upload } from 'lucide-react-native';
 
@@ -19,62 +19,134 @@ export const ImageUploadButton: React.FC<ImageUploadButtonProps> = ({
   isUploading = false,
 }) => {
   return (
-    <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50 mb-4">
-      <LinearGradient
-        colors={['rgba(52, 211, 153, 0.1)', 'rgba(96, 165, 250, 0.1)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="absolute inset-0 rounded-2xl"
-      />
-      
-      <Text className="text-white font-semibold text-base mb-3">Upload Food Image</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Upload Food Image</Text>
       
       {imageUri ? (
-        <View className="items-center">
+        <View style={styles.imageSection}>
           <Image
             source={{ uri: imageUri }}
-            className="w-full h-32 rounded-xl mb-3"
+            style={styles.image}
             resizeMode="cover"
           />
           <TouchableOpacity
             onPress={onUploadPress}
             disabled={isUploading}
-            className={`w-full py-3 rounded-xl flex-row items-center justify-center ${
-              isUploading ? 'bg-gray-600' : 'bg-green-600'
-            }`}
+            style={[
+              styles.uploadButton,
+              isUploading && styles.uploadButtonDisabled
+            ]}
             activeOpacity={0.8}
           >
-            <Upload size={20} color="white" className="mr-2" />
-            <Text className="text-white font-semibold text-base ml-2">
+            <Upload size={20} color="white" />
+            <Text style={styles.uploadButtonText}>
               {isUploading ? 'Processing...' : 'Scan Image'}
             </Text>
           </TouchableOpacity>
         </View>
       ) : (
-        <View className="space-y-3">
+        <View style={styles.buttonSection}>
           <TouchableOpacity
             onPress={onCameraPress}
-            className="bg-blue-600 rounded-xl py-4 flex-row items-center justify-center"
+            style={styles.cameraButton}
             activeOpacity={0.8}
           >
-            <Camera size={24} color="white" className="mr-3" />
-            <Text className="text-white font-semibold text-base">Take Photo</Text>
+            <Camera size={24} color="white" />
+            <Text style={styles.buttonText}>Take Photo</Text>
           </TouchableOpacity>
           
           <TouchableOpacity
             onPress={onGalleryPress}
-            className="bg-purple-600 rounded-xl py-4 flex-row items-center justify-center"
+            style={styles.galleryButton}
             activeOpacity={0.8}
           >
-            <ImageIcon size={24} color="white" className="mr-3" />
-            <Text className="text-white font-semibold text-base">Choose from Gallery</Text>
+            <ImageIcon size={24} color="white" />
+            <Text style={styles.buttonText}>Choose from Gallery</Text>
           </TouchableOpacity>
         </View>
       )}
       
-      <Text className="text-gray-400 text-xs text-center mt-3">
+      <Text style={styles.hint}>
         Take a clear photo of your food for accurate nutrition analysis
       </Text>
     </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 12,
+  },
+  imageSection: {
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 128,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  uploadButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  uploadButtonDisabled: {
+    backgroundColor: '#d1d5db',
+  },
+  uploadButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  buttonSection: {
+    gap: 12,
+  },
+  cameraButton: {
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  galleryButton: {
+    backgroundColor: '#8B5CF6',
+    borderRadius: 12,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 16,
+    marginLeft: 12,
+  },
+  hint: {
+    fontSize: 12,
+    color: '#64748b',
+    textAlign: 'center',
+    marginTop: 12,
+  },
+}); 

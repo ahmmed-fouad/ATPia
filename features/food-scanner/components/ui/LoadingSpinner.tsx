@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated } from 'react-native';
+import { View, Text, Animated, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Loader2 } from 'lucide-react-native';
 
@@ -12,7 +12,7 @@ interface LoadingSpinnerProps {
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   message = 'Processing...',
   size = 'medium',
-  color = '#34D399',
+  color = '#059669',
 }) => {
   const spinValue = useRef(new Animated.Value(0)).current;
 
@@ -37,26 +37,19 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const getSizeConfig = () => {
     switch (size) {
       case 'small':
-        return { iconSize: 16, textSize: 'text-sm' };
+        return { iconSize: 16, textSize: 14 };
       case 'large':
-        return { iconSize: 32, textSize: 'text-lg' };
+        return { iconSize: 32, textSize: 18 };
       default:
-        return { iconSize: 24, textSize: 'text-base' };
+        return { iconSize: 24, textSize: 16 };
     }
   };
 
   const sizeConfig = getSizeConfig();
 
   return (
-    <View className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50">
-      <LinearGradient
-        colors={['rgba(52, 211, 153, 0.1)', 'rgba(96, 165, 250, 0.1)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="absolute inset-0 rounded-2xl"
-      />
-      
-      <View className="items-center">
+    <View style={styles.container}>
+      <View style={styles.content}>
         <Animated.View
           style={{
             transform: [{ rotate: spin }],
@@ -65,14 +58,42 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           <Loader2 size={sizeConfig.iconSize} color={color} />
         </Animated.View>
         
-        <Text className={`text-white font-medium mt-3 ${sizeConfig.textSize}`}>
+        <Text style={[styles.message, { fontSize: sizeConfig.textSize }]}>
           {message}
         </Text>
         
-        <Text className="text-gray-400 text-xs text-center mt-2">
+        <Text style={styles.subtitle}>
           Analyzing your food...
         </Text>
       </View>
     </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 16,
+    padding: 24,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  content: {
+    alignItems: 'center',
+  },
+  message: {
+    color: '#111827',
+    fontWeight: '600',
+    marginTop: 12,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 12,
+    color: '#64748b',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+}); 
