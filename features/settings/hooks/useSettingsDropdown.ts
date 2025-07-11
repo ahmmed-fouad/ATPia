@@ -1,9 +1,12 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export const useSettingsDropdown = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<'ar' | 'en'>('en');
   const [currentMode, setCurrentMode] = useState<'light' | 'dark'>('light');
+
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
@@ -27,7 +30,7 @@ export const useSettingsDropdown = () => {
 
   const handleSettingsPress = () => {
     // Here you would navigate to the full settings screen
-    console.log('Navigate to settings screen');
+    router.push('/(main)/settings');
   };
 
   return {
