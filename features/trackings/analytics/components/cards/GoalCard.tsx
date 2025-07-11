@@ -41,7 +41,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onPress }) => {
   const CardContent = () => (
     <View style={styles.container}>
       <LinearGradient
-        colors={getGradientColors()}
+        colors={getGradientColors() as [string, string]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.gradient}

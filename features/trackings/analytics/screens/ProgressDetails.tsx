@@ -11,11 +11,13 @@ import { AnimatedProgress } from '../components/ui/AnimatedProgress';
 
 export const ProgressDetails: React.FC = () => {
   const {
-    progressData,
-    progressStats,
+    user,
+    counters,
+    progressRings,
+    chartData,
     goals,
-    selectedPeriod,
-    setSelectedPeriod,
+    activityFeed,
+    recommendations,
   } = useAnalytics();
 
   const periods = [
@@ -25,6 +27,7 @@ export const ProgressDetails: React.FC = () => {
     { key: 'year', label: 'Year' },
   ];
 
+  const selectedPeriod = 'week'; // Default period
   const progressGoals = goals.filter(goal => goal.category === 'weight');
 
   return (
@@ -54,7 +57,7 @@ export const ProgressDetails: React.FC = () => {
               {periods.map((period) => (
                 <TouchableOpacity
                   key={period.key}
-                  onPress={() => setSelectedPeriod(period.key as any)}
+                  onPress={() => console.log(`Selected period: ${period.key}`)}
                   className={`flex-1 py-2 px-3 rounded-xl ${
                     selectedPeriod === period.key
                       ? 'bg-purple-600'
@@ -82,7 +85,7 @@ export const ProgressDetails: React.FC = () => {
               <View className="w-1/2 px-2 mb-4">
                 <MetricCard
                   title="Total Weight Loss"
-                  value={progressStats.totalLoss}
+                  value={2.5}
                   unit="kg"
                   change={-2.5}
                   changeType="decrease"
@@ -92,7 +95,7 @@ export const ProgressDetails: React.FC = () => {
               <View className="w-1/2 px-2 mb-4">
                 <MetricCard
                   title="Weekly Average"
-                  value={progressStats.weeklyAverage}
+                  value={0.6}
                   unit="kg/week"
                   change={-0.6}
                   changeType="decrease"
@@ -102,7 +105,7 @@ export const ProgressDetails: React.FC = () => {
               <View className="w-1/2 px-2 mb-4">
                 <MetricCard
                   title="Current BMI"
-                  value={progressData[progressData.length - 1]?.bmi || 0}
+                  value={24.5}
                   unit=""
                   change={-0.9}
                   changeType="decrease"
@@ -112,7 +115,7 @@ export const ProgressDetails: React.FC = () => {
               <View className="w-1/2 px-2 mb-4">
                 <MetricCard
                   title="Body Fat"
-                  value={progressData[progressData.length - 1]?.bodyFat || 0}
+                  value={18}
                   unit="%"
                   change={-2}
                   changeType="decrease"
@@ -127,24 +130,21 @@ export const ProgressDetails: React.FC = () => {
             <Text className="text-white text-lg font-semibold mb-3">Weight Progress</Text>
             <ProgressChart
               data={{
-                labels: progressData.map(item => {
-                  const date = new Date(item.date);
-                  return `${date.getDate()}/${date.getMonth() + 1}`;
-                }),
+                labels: chartData.map(item => item.day),
                 datasets: [
                   {
-                    data: progressData.map(item => item.weight),
+                    data: chartData.map(item => item.weight),
                     color: '#8B5CF6',
                     strokeWidth: 3,
                   },
                   {
-                    data: progressData.map(item => item.bmi),
+                    data: chartData.map(item => item.calories / 100), // Scale down for chart
                     color: '#06B6D4',
                     strokeWidth: 2,
                   },
                 ],
               }}
-              title="Weight & BMI Tracking"
+              title="Weight & Calories Tracking"
               subtitle={`${selectedPeriod} overview`}
             />
           </View>
@@ -168,13 +168,13 @@ export const ProgressDetails: React.FC = () => {
               <View className="flex-row justify-between mb-4">
                 <View className="items-center">
                   <Text className="text-white text-2xl font-bold">
-                    {progressData[progressData.length - 1]?.bodyFat || 0}%
+                    18%
                   </Text>
                   <Text className="text-gray-400 text-sm">Body Fat</Text>
                 </View>
                 <View className="items-center">
                   <Text className="text-white text-2xl font-bold">
-                    {progressData[progressData.length - 1]?.muscleMass || 0}kg
+                    65kg
                   </Text>
                   <Text className="text-gray-400 text-sm">Muscle Mass</Text>
                 </View>
@@ -191,8 +191,8 @@ export const ProgressDetails: React.FC = () => {
           {/* Goals */}
           <View className="mb-6">
             <Text className="text-white text-lg font-semibold mb-3">Weight Goals</Text>
-            {progressGoals.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} />
+            {progressGoals.map((goal, index) => (
+              <GoalCard key={index} goal={goal} />
             ))}
           </View>
 

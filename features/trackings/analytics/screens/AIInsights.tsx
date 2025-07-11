@@ -10,16 +10,26 @@ import { AnimatedProgress } from '../components/ui/AnimatedProgress';
 
 export const AIInsights: React.FC = () => {
   const {
-    insights,
-    progressStats,
-    nutritionStats,
-    selectedPeriod,
+    user,
+    counters,
+    progressRings,
+    chartData,
+    goals,
+    activityFeed,
+    recommendations,
   } = useAnalytics();
 
-  const achievementInsights = insights.filter(i => i.type === 'achievement');
-  const recommendationInsights = insights.filter(i => i.type === 'recommendation');
-  const warningInsights = insights.filter(i => i.type === 'warning');
-  const patternInsights = insights.filter(i => i.type === 'pattern');
+  // For now, we'll use recommendations as insights since we don't have AI insights yet
+  const mockInsights = recommendations.map((rec, index) => ({
+    id: `insight-${index}`,
+    type: 'recommendation' as const,
+    title: 'Recommendation',
+    message: rec.text,
+    confidence: 85,
+    category: 'nutrition',
+    actionable: true,
+    actionText: 'Learn More',
+  }));
 
   const handleInsightAction = (insightId: string, actionText: string) => {
     console.log(`Action pressed for insight ${insightId}: ${actionText}`);
@@ -135,53 +145,11 @@ export const AIInsights: React.FC = () => {
             </View>
           </View>
 
-          {/* Achievements */}
-          {achievementInsights.length > 0 && (
-            <View className="mb-6">
-              <Text className="text-white text-lg font-semibold mb-3">Recent Achievements</Text>
-              {achievementInsights.map((insight) => (
-                <InsightCard
-                  key={insight.id}
-                  insight={insight}
-                  onActionPress={() => handleInsightAction(insight.id, insight.actionText || '')}
-                />
-              ))}
-            </View>
-          )}
-
           {/* Recommendations */}
-          {recommendationInsights.length > 0 && (
+          {mockInsights.length > 0 && (
             <View className="mb-6">
               <Text className="text-white text-lg font-semibold mb-3">Smart Recommendations</Text>
-              {recommendationInsights.map((insight) => (
-                <InsightCard
-                  key={insight.id}
-                  insight={insight}
-                  onActionPress={() => handleInsightAction(insight.id, insight.actionText || '')}
-                />
-              ))}
-            </View>
-          )}
-
-          {/* Pattern Recognition */}
-          {patternInsights.length > 0 && (
-            <View className="mb-6">
-              <Text className="text-white text-lg font-semibold mb-3">Pattern Recognition</Text>
-              {patternInsights.map((insight) => (
-                <InsightCard
-                  key={insight.id}
-                  insight={insight}
-                  onActionPress={() => handleInsightAction(insight.id, insight.actionText || '')}
-                />
-              ))}
-            </View>
-          )}
-
-          {/* Warnings */}
-          {warningInsights.length > 0 && (
-            <View className="mb-6">
-              <Text className="text-white text-lg font-semibold mb-3">Important Alerts</Text>
-              {warningInsights.map((insight) => (
+              {mockInsights.map((insight) => (
                 <InsightCard
                   key={insight.id}
                   insight={insight}

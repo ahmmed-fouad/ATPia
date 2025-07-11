@@ -1,448 +1,256 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { BarChart3, TrendingUp, Target, Lightbulb, Activity, Heart, Zap, Moon } from 'lucide-react-native';
-import { useAnalytics } from '../hooks/useAnalytics';
-import { ProgressChart } from '../components/charts/ProgressChart';
-import { NutritionChart } from '../components/charts/NutritionChart';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import GreetingCard from '../components/GreetingCard';
+import AnimatedCounters from '../components/AnimatedCounters';
+import ProgressRings from '../components/ProgressRings';
+import WeeklyProgressChart from '../components/WeeklyProgressChart';
+import GoalsCard from '../components/GoalsCard';
+import QuickActions from '../components/QuickActions';
+import RecentActivity from '../components/RecentActivity';
+import RecommendationsCard from '../components/RecommendationsCard';
 import { MetricCard } from '../components/cards/MetricCard';
-import { GoalCard } from '../components/cards/GoalCard';
 import { InsightCard } from '../components/cards/InsightCard';
-import { AnimatedProgress } from '../components/ui/AnimatedProgress';
+import { useAnalytics } from '../hooks/useAnalytics';
 
-export const AnalyticsDashboard: React.FC = () => {
-  const {
-    progressStats,
-    nutritionStats,
-    recentProgress,
-    recentNutrition,
-    recentHealth,
-    goals,
-    insights,
-    selectedPeriod,
-    setSelectedPeriod,
-    setSelectedCategory,
-  } = useAnalytics();
+const periods = [
+  { key: 'week', label: 'Week' },
+  { key: 'month', label: 'Month' },
+  { key: 'quarter', label: 'Quarter' },
+  { key: 'year', label: 'Year' },
+];
 
-  const periods = [
-    { key: 'week', label: 'Week' },
-    { key: 'month', label: 'Month' },
-    { key: 'quarter', label: 'Quarter' },
-    { key: 'year', label: 'Year' },
-  ];
+const AnalyticsDashboard = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('week');
+  const { user, counters, progressRings, chartData, goals, activityFeed, recommendations } = useAnalytics();
 
-  const categories = [
-    { key: 'overview', label: 'Overview', icon: BarChart3, color: '#059669' },
-    { key: 'progress', label: 'Progress', icon: TrendingUp, color: '#10B981' },
-    { key: 'nutrition', label: 'Nutrition', icon: Target, color: '#F59E0B' },
-    { key: 'insights', label: 'AI Insights', icon: Lightbulb, color: '#8B5CF6' },
-  ];
-
-  const quickStats = [
-    {
-      title: 'Current Weight',
-      value: recentProgress?.weight || 0,
-      unit: 'kg',
-      change: progressStats.totalLoss > 0 ? -2.5 : 0,
-      changeType: progressStats.trend,
-      subtitle: 'Last recorded',
-      icon: Activity,
-      color: '#059669'
-    },
-    {
-      title: 'Daily Calories',
-      value: recentNutrition?.calories || 0,
-      unit: 'kcal',
-      change: -5,
-      changeType: 'decrease',
-      subtitle: 'Average intake',
-      icon: Heart,
-      color: '#EF4444'
-    },
-    {
-      title: 'Sleep Quality',
-      value: recentHealth?.sleepQuality || 0,
-      unit: '/10',
-      change: +2,
-      changeType: 'increase',
-      subtitle: 'Last night',
-      icon: Moon,
-      color: '#8B5CF6'
-    },
-    {
-      title: 'Energy Level',
-      value: recentHealth?.energyLevel || 0,
-      unit: '/10',
-      change: +1,
-      changeType: 'increase',
-      subtitle: 'Today',
-      icon: Zap,
-      color: '#F59E0B'
-    },
-  ];
+  // Create mock insights from recommendations
+  const mockInsights = recommendations.slice(0, 2).map((rec, index) => ({
+    id: `insight-${index}`,
+    type: 'recommendation' as const,
+    title: 'Smart Tip',
+    message: rec.text,
+    confidence: 85,
+    category: 'nutrition',
+    actionable: true,
+    actionText: 'Learn More',
+  }));
 
   return (
-    <LinearGradient
-      colors={["#f5f7fa", "#e0f7fa", "#d1fae5"]}
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView 
-          contentContainerStyle={styles.container} 
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>Analytics</Text>
-            <Text style={styles.subtitle}>
-              Track your health journey with AI-powered insights
+    <ScrollView style={styles.bg} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <GreetingCard />
+      {/* Period Selector */}
+      <View style={styles.periodRow}>
+        {periods.map((period) => (
+          <TouchableOpacity
+            key={period.key}
+            style={[styles.periodBtn, selectedPeriod === period.key && styles.periodBtnActive]}
+            onPress={() => setSelectedPeriod(period.key as any)}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.periodText, selectedPeriod === period.key && styles.periodTextActive]}>
+              {period.label}
             </Text>
-          </View>
-
-          {/* Period Selector */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Time Period</Text>
-            <View style={styles.periodSelector}>
-              {periods.map((period) => (
-                <TouchableOpacity
-                  key={period.key}
-                  onPress={() => setSelectedPeriod(period.key as any)}
-                  style={[
-                    styles.periodButton,
-                    selectedPeriod === period.key && styles.periodButtonActive
-                  ]}
-                >
-                  <Text style={[
-                    styles.periodButtonText,
-                    selectedPeriod === period.key && styles.periodButtonTextActive
-                  ]}>
-                    {period.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+          </TouchableOpacity>
+        ))}
+      </View>
+      
+      {/* Quick Stats */}
+      <View style={styles.quickStatsCard}>
+        <Text style={styles.sectionTitle}>Quick Stats</Text>
+        <View style={styles.statsGridImproved}>
+          <View style={[styles.statCardImproved, styles.statCardSuccess]}> 
+            <View style={{ backgroundColor: '#34d399' }} />
+            <Text style={[styles.statValue, { color: '#059669' }]}>85%</Text>
+            <View style={styles.statLabelRow}>
+              <Text style={styles.statLabel}>Success Rate</Text>
+              <Text style={[styles.statChange, { color: '#059669' }]}>↑ +5%</Text>
             </View>
+            <Text style={styles.statSubLabel}>Goal achievement</Text>
           </View>
-
-          {/* Quick Stats */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Quick Stats</Text>
-            <View style={styles.statsGrid}>
-              {quickStats.map((stat, index) => {
-                const IconComponent = stat.icon;
-                return (
-                  <View key={index} style={styles.statCard}>
-                    <View style={styles.statHeader}>
-                      <View style={[styles.statIcon, { backgroundColor: stat.color + '20' }]}>
-                        <IconComponent size={16} color={stat.color} />
-                      </View>
-                      <View style={styles.statChange}>
-                        <Text style={[
-                          styles.changeText,
-                          { color: stat.changeType === 'increase' ? '#10B981' : '#EF4444' }
-                        ]}>
-                          {stat.change > 0 ? '+' : ''}{stat.change}%
-                        </Text>
-                      </View>
-                    </View>
-                    <Text style={styles.statValue}>
-                      {typeof stat.value === 'number' ? stat.value.toFixed(1) : stat.value}
-                      <Text style={styles.statUnit}> {stat.unit}</Text>
-                    </Text>
-                    <Text style={styles.statTitle}>{stat.title}</Text>
-                    <Text style={styles.statSubtitle}>{stat.subtitle}</Text>
-                  </View>
-                );
-              })}
+          <View style={styles.verticalDivider} />
+          <View style={[styles.statCardImproved, styles.statCardConsistency]}> 
+            <View style={{ backgroundColor: '#60a5fa' }} />
+            <Text style={[styles.statValue, { color: '#2563eb' }]}>78%</Text>
+            <View style={styles.statLabelRow}>
+              <Text style={styles.statLabel}>Consistency</Text>
+              <Text style={[styles.statChange, { color: '#2563eb' }]}>↑ +3%</Text>
             </View>
+            <Text style={styles.statSubLabel}>Daily adherence</Text>
           </View>
+        </View>
+      </View>
 
-          {/* Progress Chart */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Progress Tracking</Text>
-            <View style={styles.chartCard}>
-              <View style={styles.chartHeader}>
-                <Text style={styles.chartTitle}>Weight & BMI Progress</Text>
-                <Text style={styles.chartSubtitle}>Last 4 weeks</Text>
-              </View>
-              <ProgressChart
-                data={{
-                  labels: ['1/1', '8/1', '15/1', '22/1', '29/1'],
-                  datasets: [
-                    {
-                      data: [75, 74.2, 73.8, 73.1, 72.5],
-                      color: '#059669',
-                      strokeWidth: 3,
-                    },
-                    {
-                      data: [24.5, 24.2, 24.0, 23.8, 23.6],
-                      color: '#10B981',
-                      strokeWidth: 2,
-                    },
-                  ],
-                }}
-                title="Weight & BMI Progress"
-                subtitle="Last 4 weeks"
-              />
-            </View>
+      <AnimatedCounters />
+      <ProgressRings />
+      <WeeklyProgressChart />
+      <GoalsCard />
+      <QuickActions />
+      
+      {/* AI Insights */}
+      <View style={styles.insightsSection}>
+        <Text style={styles.sectionTitle}>AI Insights</Text>
+        {mockInsights.map((insight) => (
+          <View key={insight.id} style={styles.insightCard}>
+            <InsightCard
+              insight={insight}
+              onActionPress={() => console.log(`Action: ${insight.actionText}`)}
+            />
           </View>
-
-          {/* Nutrition Chart */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Nutrition Overview</Text>
-            <View style={styles.chartCard}>
-              <View style={styles.chartHeader}>
-                <Text style={styles.chartTitle}>Daily Nutrition Intake</Text>
-                <Text style={styles.chartSubtitle}>Calories, Protein, Carbs, Fats</Text>
-              </View>
-              <NutritionChart
-                data={{
-                  labels: ['1/1', '8/1', '15/1', '22/1', '29/1'],
-                  datasets: [
-                    {
-                      data: [2100, 2050, 2000, 1950, 1900],
-                      color: '#F59E0B',
-                      strokeWidth: 3,
-                    },
-                    {
-                      data: [150, 155, 160, 165, 170],
-                      color: '#10B981',
-                      strokeWidth: 2,
-                    },
-                    {
-                      data: [200, 190, 180, 170, 160],
-                      color: '#EF4444',
-                      strokeWidth: 2,
-                    },
-                    {
-                      data: [70, 68, 65, 62, 60],
-                      color: '#8B5CF6',
-                      strokeWidth: 2,
-                    },
-                  ],
-                }}
-                title="Daily Nutrition Intake"
-                subtitle="Calories, Protein, Carbs, Fats"
-              />
-            </View>
-          </View>
-
-          {/* Goals */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Your Goals</Text>
-            {goals.slice(0, 2).map((goal) => (
-              <GoalCard key={goal.id} goal={goal} />
-            ))}
-          </View>
-
-          {/* AI Insights */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>AI Insights</Text>
-            {insights.slice(0, 2).map((insight) => (
-              <InsightCard key={insight.id} insight={insight} />
-            ))}
-          </View>
-
-          {/* Category Navigation */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Explore More</Text>
-            <View style={styles.categoriesGrid}>
-              {categories.map((category) => {
-                const IconComponent = category.icon;
-                return (
-                  <TouchableOpacity
-                    key={category.key}
-                    onPress={() => setSelectedCategory(category.key)}
-                    style={styles.categoryCard}
-                  >
-                    <View style={[styles.categoryIcon, { backgroundColor: category.color + '20' }]}>
-                      <IconComponent size={24} color={category.color} />
-                    </View>
-                    <Text style={styles.categoryTitle}>{category.label}</Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </LinearGradient>
+        ))}
+      </View>
+      
+      <RecentActivity />
+      <RecommendationsCard />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  bg: { flex: 1, backgroundColor: '#f3f4f6' },
   container: {
     padding: 16,
+    gap: 18,
     paddingBottom: 32,
-    gap: 16,
   },
-  header: {
+  periodRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 12,
+    gap: 8,
+  },
+  periodBtn: {
+    paddingVertical: 7,
+    paddingHorizontal: 18,
+    borderRadius: 18,
+    backgroundColor: '#e0e7ef',
+  },
+  periodBtnActive: {
+    backgroundColor: '#6366f1',
+  },
+  periodText: {
+    color: '#334155',
+    fontWeight: '600',
+    fontSize: 15,
+  },
+  periodTextActive: {
+    color: '#fff',
+  },
+  quickStatsCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  statsGridImproved: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    gap: 0,
+  },
+  statCardImproved: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 8,
+  },
+  verticalDivider: {
+    width: 1,
+    backgroundColor: '#e5e7eb',
+    marginHorizontal: 8,
+    borderRadius: 1,
+  },
+  statsSection: {
     marginBottom: 8,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#059669',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
-    marginBottom: 4,
-    letterSpacing: 0.5,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#64748b',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
-    textAlign: 'center',
-    fontWeight: '500',
-    letterSpacing: 0.2,
-  },
-  section: {
-    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#059669',
+    fontWeight: '700',
+    color: '#334155',
     marginBottom: 12,
-  },
-  periodSelector: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.97)',
-    borderRadius: 16,
-    padding: 4,
-    shadowColor: '#a7f3d0',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  periodButton: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  periodButtonActive: {
-    backgroundColor: '#059669',
-  },
-  periodButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#64748b',
-  },
-  periodButtonTextActive: {
-    color: '#ffffff',
   },
   statsGrid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 12,
   },
   statCard: {
-    width: '48%',
-    backgroundColor: 'rgba(255,255,255,0.97)',
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: '#a7f3d0',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
-    shadowRadius: 6,
-    elevation: 3,
+    flex: 1,
   },
-  statHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  insightsSection: {
     marginBottom: 8,
   },
-  statIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statChange: {
-    alignItems: 'flex-end',
-  },
-  changeText: {
-    fontSize: 12,
-    fontWeight: '600',
+  insightCard: {
+    marginBottom: 8,
   },
   statValue: {
-    fontSize: 20,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 4,
-  },
-  statUnit: {
-    fontSize: 14,
-    color: '#64748b',
-    fontWeight: '500',
-  },
-  statTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
+    color: '#334155',
+    textAlign: 'center',
     marginBottom: 2,
   },
-  statSubtitle: {
-    fontSize: 12,
-    color: '#64748b',
-  },
-  chartCard: {
-    backgroundColor: 'rgba(255,255,255,0.97)',
-    borderRadius: 18,
-    padding: 16,
-    shadowColor: '#a7f3d0',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-  chartHeader: {
-    marginBottom: 12,
-  },
-  chartTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#059669',
-    marginBottom: 2,
-  },
-  chartSubtitle: {
-    fontSize: 14,
-    color: '#64748b',
-  },
-  categoriesGrid: {
+  statLabelRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  categoryCard: {
-    width: '48%',
-    backgroundColor: 'rgba(255,255,255,0.97)',
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-    shadowColor: '#a7f3d0',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  categoryIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 2,
+    gap: 6,
   },
-  categoryTitle: {
-    fontSize: 14,
+  statLabel: {
+    fontSize: 15,
     fontWeight: '600',
-    color: '#374151',
-    textAlign: 'center',
+    color: '#22223b',
   },
-}); 
+  statChange: {
+    fontSize: 14,
+    color: '#10b981',
+    fontWeight: '700',
+    marginLeft: 4,
+  },
+  statSubLabel: {
+    fontSize: 13,
+    color: '#94a3b8',
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  statCardSuccess: {
+    backgroundColor: '#ecfdf5', // light green
+    borderRadius: 14,
+    margin: 2,
+    shadowColor: '#34d399',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 1,
+    position: 'relative',
+  },
+  statCardConsistency: {
+    backgroundColor: '#eff6ff', // light blue
+    borderRadius: 14,
+    margin: 2,
+    shadowColor: '#60a5fa',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 1,
+    position: 'relative',
+  },
+  // statAccentBar: {
+  //   height: "110%",
+  //   width: 4,
+  //   borderTopLeftRadius: 14,
+  //   borderTopRightRadius: 14,
+  //   marginBottom: 8,
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   right: 0,
+  //   bottom: 0,
+  // },
+});
+
+export default AnalyticsDashboard; 

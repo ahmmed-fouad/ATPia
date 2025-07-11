@@ -61,7 +61,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   const CardContent = () => (
     <View className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
       <LinearGradient
-        colors={getGradientColors()}
+        colors={getGradientColors() as [string, string]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="absolute inset-0 rounded-2xl"
