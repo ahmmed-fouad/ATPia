@@ -3,6 +3,8 @@ import { images } from '@/constans';
 import { ChatDrawer } from '@/features/ai/components/drawer/ChatDrawer';
 import { ChatService } from '@/features/ai/services/chatService';
 import { useChatStore } from '@/features/ai/stores/chatStore';
+import { SettingsDropdown } from '@/features/user/settings/components';
+import { useSettingsDropdown } from '@/features/user/settings/hooks';
 import { tabItems } from '@/shared/data/tabItems';
 import { Slot, usePathname, useRouter } from 'expo-router';
 import { Bell, HomeIcon, Menu, Search, Settings } from 'lucide-react-native';
@@ -15,6 +17,18 @@ const MainLayout = () => {
   const addChat = useChatStore((state) => state.addChat);
   const deleteChat = useChatStore((state) => state.deleteChat);
   const chats = useChatStore((state) => state.chats);
+  
+  // Settings dropdown hook
+  const {
+    isDropdownVisible,
+    currentLanguage,
+    currentMode,
+    toggleDropdown,
+    closeDropdown,
+    handleLanguageChange,
+    handleModeChange,
+    handleSettingsPress,
+  } = useSettingsDropdown();
 
   // Navigation mapping - much cleaner!
   const tabRoutes = {
@@ -149,7 +163,7 @@ const MainLayout = () => {
 
         {/* Right Icons */}
         <View className="flex-row items-center space-x-3  py-3 gap-4">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleDropdown}>
             <Settings size={25} color="#374151" />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -181,6 +195,17 @@ const MainLayout = () => {
         onTabPress={handleTabPress}
         inactiveIconColor="#9ca3af"
         activeTextColor="#6366f1"
+      />
+
+      {/* Settings Dropdown */}
+      <SettingsDropdown
+        isVisible={isDropdownVisible}
+        onClose={closeDropdown}
+        onLanguageChange={handleLanguageChange}
+        onModeChange={handleModeChange}
+        onSettingsPress={handleSettingsPress}
+        currentLanguage={currentLanguage}
+        currentMode={currentMode}
       />
     </SafeAreaView>
   );
