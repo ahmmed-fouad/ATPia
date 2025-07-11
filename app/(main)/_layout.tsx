@@ -12,6 +12,8 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AvatarDropdown } from '@/features/avatar/main/components';
 import { useAvatarDropdown } from '@/features/avatar/main/hooks';
+import { MenuDropdown } from '@/features/menu/components';
+import { useMenuDropdown } from '@/features/menu/hooks';
 
 const MainLayout = () => {
   const router = useRouter();
@@ -38,6 +40,13 @@ const MainLayout = () => {
     toggleDropdown: toggleAvatarDropdown,
     closeDropdown: closeAvatarDropdown,
   } = useAvatarDropdown();
+
+  // Menu dropdown hook
+  const {
+    isDropdownVisible: isMenuDropdownVisible,
+    toggleDropdown: toggleMenuDropdown,
+    closeDropdown: closeMenuDropdown,
+  } = useMenuDropdown();
 
   // Navigation mapping - much cleaner!
   const tabRoutes = {
@@ -128,8 +137,10 @@ const MainLayout = () => {
     <SafeAreaView className="flex-1 bg-white">
       {/*1st Top Bar */}
       {/* Logo & avatar*/}
-      <View className="flex-row items-center justify-between px-4 
-        py-3 bg-white border-b border-gray-200">
+      <View
+        className="flex-row items-center justify-between px-4 
+        py-3 bg-white border-b border-gray-200"
+      >
         <View className="flex-row items-center">
           <Image
             source={images.ATPiaLogo}
@@ -138,26 +149,32 @@ const MainLayout = () => {
           />
           <Text className="text-gray-500 ml-2 text-xl font-bold">ATPia</Text>
         </View>
-        <View className="flex-row items-center space-x-3 justify-between py-3 bg-white border-b border-gray-200">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={toggleAvatarDropdown} activeOpacity={0.7} className="flex-row gap-2 items-center">
-            <Text className="text-gray-500 ml-2 text-xl font-bold">Ahmed</Text>
-            <Image
-              source={images.avatarr}
-              className="w-10 h-10"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+        <View className="flex-row items-center space-x-3 justify-between py-3 bg-white">
+          <View className="flex-row items-center">
+            <TouchableOpacity
+              onPress={toggleAvatarDropdown}
+              activeOpacity={0.7}
+              className="flex-row gap-2 items-center"
+            >
+              <Text className="text-gray-500 ml-2 text-xl font-bold">
+                Ahmed
+              </Text>
+              <Image
+                source={images.avatarr}
+                className="w-10 h-10"
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
       </View>
 
       {/* 2nd Top Bar */}
       <View className="flex-row items-center space-x-3 justify-between px-4  bg-white border-b border-gray-200">
         {/* Left Icons */}
         <View className="flex-row items-center space-x-3  py-3 gap-4">
-          <TouchableOpacity onPress={() => handleTabPress("home")}>
-            <HomeIcon size={25} color={isHomeScreen ? "#3b82f6" : "#374151"} />
+          <TouchableOpacity onPress={toggleMenuDropdown}>
+            <Menu size={25} color="#374151" />
           </TouchableOpacity>
           <TouchableOpacity>
             <Bell size={25} color="#374151" />
@@ -180,8 +197,8 @@ const MainLayout = () => {
           <TouchableOpacity onPress={toggleDropdown}>
             <Settings size={25} color="#374151" />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Menu size={25} color="#374151" />
+          <TouchableOpacity onPress={() => handleTabPress("home")}>
+            <HomeIcon size={25} color={isHomeScreen ? "#3b82f6" : "#374151"} />
           </TouchableOpacity>
         </View>
       </View>
@@ -226,6 +243,12 @@ const MainLayout = () => {
       <AvatarDropdown
         isVisible={isAvatarDropdownVisible}
         onClose={closeAvatarDropdown}
+      />
+
+      {/* Menu Dropdown */}
+      <MenuDropdown
+        isVisible={isMenuDropdownVisible}
+        onClose={closeMenuDropdown}
       />
     </SafeAreaView>
   );
