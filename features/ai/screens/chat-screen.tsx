@@ -223,6 +223,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
 
         <TouchableOpacity style={styles.newChatButton}>
           <Ionicons name="add" size={24} color="#3B82F6" />
+          <Text>test github</Text>
         </TouchableOpacity>
       </View>
 
