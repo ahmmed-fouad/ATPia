@@ -14,6 +14,8 @@ import { AvatarDropdown } from '@/features/avatar/main/components';
 import { useAvatarDropdown } from '@/features/avatar/main/hooks';
 import { MenuDropdown } from '@/features/menu/components';
 import { useMenuDropdown } from '@/features/menu/hooks';
+import { NotificationsDropdown } from '@/features/notifications/components';
+import { useNotificationsDropdown } from '@/features/notifications/hooks';
 
 const MainLayout = () => {
   const router = useRouter();
@@ -47,6 +49,13 @@ const MainLayout = () => {
     toggleDropdown: toggleMenuDropdown,
     closeDropdown: closeMenuDropdown,
   } = useMenuDropdown();
+
+  // Notifications dropdown hook
+  const {
+    isDropdownVisible: isNotificationsDropdownVisible,
+    toggleDropdown: toggleNotificationsDropdown,
+    closeDropdown: closeNotificationsDropdown,
+  } = useNotificationsDropdown();
 
   // Navigation mapping - much cleaner!
   const tabRoutes = {
@@ -176,7 +185,7 @@ const MainLayout = () => {
           <TouchableOpacity onPress={toggleMenuDropdown}>
             <Menu size={25} color="#374151" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleNotificationsDropdown}>
             <Bell size={25} color="#374151" />
           </TouchableOpacity>
         </View>
@@ -249,6 +258,12 @@ const MainLayout = () => {
       <MenuDropdown
         isVisible={isMenuDropdownVisible}
         onClose={closeMenuDropdown}
+      />
+
+      {/* Notifications Dropdown */}
+      <NotificationsDropdown
+        isVisible={isNotificationsDropdownVisible}
+        onClose={closeNotificationsDropdown}
       />
     </SafeAreaView>
   );

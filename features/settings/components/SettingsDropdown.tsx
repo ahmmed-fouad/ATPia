@@ -212,15 +212,15 @@ const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
 const styles = StyleSheet.create({
   dropdown: {
     position: 'absolute',
-    top: 100,
-    right: 18,
+    top: 140,
+    right: 7,
     minWidth: 300,
     backgroundColor: CARD_BG,
     borderRadius: 18,
     overflow: 'hidden',
   },
   header: {
-    paddingVertical: 16,
+    paddingVertical: 5,
     paddingHorizontal: 22,
     backgroundColor: '#f1f5f9',
     borderTopLeftRadius: 18,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: '#f9fafb',
-    paddingVertical: 10,
+    paddingVertical: 5,
     alignItems: 'center',
     borderBottomLeftRadius: 18,
     borderBottomRightRadius: 18,
