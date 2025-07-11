@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { ChatScreen } from '../../../features/ai/screens/chat-screen';
-import { ChatService } from '../../../features/ai/services/chatService';
-import { useChatStore } from '../../../features/ai/stores/chatStore';
+import { ChatScreen } from '../../../../features/ai/screens/chat-screen';
+import { ChatService } from '../../../../features/ai/services/chatService';
+import { useChatStore } from '../../../../features/ai/stores/chatStore';
 
 const { width } = Dimensions.get('window');
 
@@ -14,20 +14,20 @@ export default function AIScreen() {
     // Create new chat logic here
     const newChat = ChatService.createNewChat();
     addChat(newChat);
-    router.push(`/ai/(chat)/${newChat.id}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${newChat.id}` as any);
   };
 
   const handleSelectChat = (chatId: string) => {
-    router.push(`/ai/(chat)/${chatId}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any);
   };
 
   const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
     switch (section) {
       case 'library':
-        router.push('/ai/library');
+        router.push('/(main)/(ai)/chatbot/library' as any);
         break;
       case 'explore':
-        router.push('/ai/explore');
+        router.push('/(main)/(ai)/chatbot/explore' as any);
         break;
     }
   };

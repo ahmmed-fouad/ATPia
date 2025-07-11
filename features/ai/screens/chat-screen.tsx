@@ -98,21 +98,21 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
   const handleNewChat = () => {
     const newChat = ChatService.createNewChat();
     addChat(newChat);
-    router.push(`/ai/chat/${newChat.id}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${newChat.id}` as any);
   };
 
   const handleSelectChat = (selectedChatId: string) => {
     setCurrentChat(selectedChatId);
-    router.push(`/ai/chat/${selectedChatId}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${selectedChatId}` as any);
   };
 
   const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
     switch (section) {
       case 'library':
-        router.push('/ai/library');
+        router.push('/(main)/(ai)/chatbot/library' as any);
         break;
       case 'explore':
-        router.push('/ai/explore');
+        router.push('/(main)/(ai)/chatbot/explore' as any);
         break;
     }
   };
@@ -197,35 +197,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({ chatId }) => {
     </View>
   );
 
+  const handleFoodScanner = () => {
+    router.push('/(main)/(ai)/food-scanner/food-scanner' as any);
+  };
+
   return (
     <View 
      style={styles.container}
      >
-      {/* Header */}
-      <View style={styles.header}
-      >
-        <TouchableOpacity
-          // className="bg-red-500"
-          onPress={toggle}
-          style={styles.menuButton}
-        >
-          <Ionicons name="menu" size={24} color="#374151" />
-        </TouchableOpacity>
-
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle} numberOfLines={1}>
-            {currentChat?.title || "New Chat"}
-          </Text>
-          <Text style={styles.headerSubtitle}>
-            {currentChat?.messages.length || 0} messages
-          </Text>
-        </View>
-
-        <TouchableOpacity style={styles.newChatButton}>
-          <Ionicons name="add" size={24} color="#3B82F6" />
-          <Text>test github</Text>
-        </TouchableOpacity>
-      </View>
 
       {/* Messages */}
       <FlatList
@@ -266,37 +245,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-    backgroundColor: '#FFFFFF',
-  },
-  menuButton: {
-    padding: 8,
-    borderRadius: 8,
-  },
-  headerContent: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 2,
-  },
-  newChatButton: {
-    padding: 8,
-    borderRadius: 8,
-  },
+
   messagesList: {
     flex: 1,
   },

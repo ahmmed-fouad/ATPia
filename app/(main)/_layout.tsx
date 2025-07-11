@@ -1,21 +1,21 @@
-import { CustomBar } from '@/components';
-import { images } from '@/constans';
-import { ChatDrawer } from '@/features/ai/components/drawer/ChatDrawer';
-import { ChatService } from '@/features/ai/services/chatService';
-import { useChatStore } from '@/features/ai/stores/chatStore';
-import { SettingsDropdown } from '@/features/settings/components';
-import { useSettingsDropdown } from '@/features/settings/hooks';
-import { tabItems } from '@/shared/data/tabItems';
-import { Slot, usePathname, useRouter } from 'expo-router';
-import { Bell, HomeIcon, Menu, Search, Settings } from 'lucide-react-native';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AvatarDropdown } from '@/features/avatar/main/components';
-import { useAvatarDropdown } from '@/features/avatar/main/hooks';
-import { MenuDropdown } from '@/features/menu/components';
-import { useMenuDropdown } from '@/features/menu/hooks';
-import { NotificationsDropdown } from '@/features/notifications/components';
-import { useNotificationsDropdown } from '@/features/notifications/hooks';
+import { CustomBar } from "@/components";
+import { images } from "@/constans";
+import { ChatDrawer } from "@/features/ai/components/drawer/ChatDrawer";
+import { ChatService } from "@/features/ai/services/chatService";
+import { useChatStore } from "@/features/ai/stores/chatStore";
+import { SettingsDropdown } from "@/features/settings/components";
+import { useSettingsDropdown } from "@/features/settings/hooks";
+import { tabItems } from "@/shared/data/tabItems";
+import { Slot, usePathname, useRouter } from "expo-router";
+import { Bell, HomeIcon, Menu, Search, Settings } from "lucide-react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AvatarDropdown } from "@/features/avatar/main/components";
+import { useAvatarDropdown } from "@/features/avatar/main/hooks";
+import { MenuDropdown } from "@/features/menu/components";
+import { useMenuDropdown } from "@/features/menu/hooks";
+import { NotificationsDropdown } from "@/features/notifications/components";
+import { useNotificationsDropdown } from "@/features/notifications/hooks";
 
 const MainLayout = () => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const MainLayout = () => {
   const addChat = useChatStore((state) => state.addChat);
   const deleteChat = useChatStore((state) => state.deleteChat);
   const chats = useChatStore((state) => state.chats);
-  
+
   // Settings dropdown hook
   const {
     isDropdownVisible,
@@ -59,87 +59,89 @@ const MainLayout = () => {
 
   // Navigation mapping - much cleaner!
   const tabRoutes = {
-    'ai': '/(main)/ai',
-    'tracking': '/(main)/(tracking)/tracker',
-    'nutrition': '/(main)/(nutration)/food-scanner',
-    'social': '/(main)/(social)/forum',
-    'home': '/(main)/home'
+    ai: "/(main)/(ai)/chatbot",
+    tracking: "/(main)/(tracking)/tracker",
+    nutrition: "/(main)/(nutration)/food-scanner",
+    social: "/(main)/(social)/forum",
+    home: "/(main)/home",
   } as const;
 
   // Path to tab mapping for active state
   const pathToTab = {
-    '/ai': 'ai',
-    '/tracking': 'tracking', 
-    '/nutration': 'nutrition',
-    '/social': 'social',
-    '/home': 'home'
+    "/ai": "ai",
+    "/tracking": "tracking",
+    "/nutration": "nutrition",
+    "/social": "social",
+    "/home": "home",
   } as const;
 
   // Determine active tab based on current route - CLEANER
   const getActiveTab = () => {
     // Map specific screens to their parent tabs
     const screenToTab = {
-      '/ai': 'ai',
-      '/tracker': 'tracking',
-      '/habits': 'tracking', 
-      '/analytics': 'tracking',
-      '/food-scanner': 'nutrition',
-      '/diet-calculator': 'nutrition',
-      '/meal-plans': 'nutrition',
-      '/grocery-list': 'nutrition',
-      '/forum': 'social',
-      '/blog': 'social',
-      '/testimonials': 'social',
-      '/chat': 'social',
-      '/home': 'home'
+      "/ai": "ai",
+      "/tracker": "tracking",
+      "/habits": "tracking",
+      "/analytics": "tracking",
+      "/food-scanner": "nutrition",
+      "/diet-calculator": "nutrition",
+      "/meal-plans": "nutrition",
+      "/grocery-list": "nutrition",
+      "/forum": "social",
+      "/blog": "social",
+      "/testimonials": "social",
+      "/chat": "social",
+      "/home": "home",
     };
-    
+
     for (const [screen, tab] of Object.entries(screenToTab)) {
       if (pathname.includes(screen)) return tab;
     }
-    
-    return 'ai'; // default
+
+    return "ai"; // default
   };
 
   const activeTab = getActiveTab();
-  const isHomeScreen = activeTab === 'home';
+  const isHomeScreen = activeTab === "home";
 
   const handleTabPress = (tabName: keyof typeof tabRoutes) => {
     const route = tabRoutes[tabName];
-    router.push(route);
+    router.push(route as any); // Fix type error for new AI route
   };
 
   // Drawer navigation handlers
   const handleNewChat = () => {
     const newChat = ChatService.createNewChat();
     addChat(newChat);
-    router.push(`/ai/(chat)/${newChat.id}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${newChat.id}` as any);
   };
 
   const handleSelectChat = (chatId: string) => {
-    router.push(`/ai/(chat)/${chatId}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any); // Fix type error for new AI chat route
   };
 
-  const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
-    if (section === 'library') router.push('/ai/library');
-    else if (section === 'explore') router.push('/ai/explore');
+  const handleSelectSection = (section: "chats" | "library" | "explore") => {
+    if (section === "library")
+      router.push("/(main)/(ai)/chatbot/library" as any);
+    else if (section === "explore")
+      router.push("/(main)/(ai)/chatbot/explore" as any);
   };
 
   const handleDeleteChat = (chatId: string) => {
     deleteChat(chatId);
     // If we're currently on the deleted chat, navigate to a new chat or home
     if (pathname.includes(`/ai/(chat)/${chatId}`)) {
-      router.push('/ai');
+      router.push("/(main)/(ai)/chatbot" as any);
     }
   };
 
   const handleDeleteAllChats = () => {
     // Delete all chats by clearing the chats array
-    chats.forEach(chat => {
+    chats.forEach((chat) => {
       deleteChat(chat.id);
     });
     // Navigate to AI home screen
-    router.push('/ai');
+    router.push("/(main)/(ai)/chatbot" as any);
   };
 
   return (

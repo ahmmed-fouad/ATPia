@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { LibraryScreen } from '../../../features/ai/screens/library-screen';
+import { ExploreScreen } from '../../../../features/ai/screens/explore-screen';
 
-export default function LibraryRoute() {
+export default function ExploreRoute() {
   const router = useRouter();
 
   const handleNewChat = () => {
@@ -10,16 +10,16 @@ export default function LibraryRoute() {
   };
 
   const handleSelectChat = (chatId: string) => {
-    router.push(`/ai/chat/${chatId}`);
+    router.push(`/(main)/(ai)/chatbot/(chat)/${chatId}` as any);
   };
 
   const handleSelectSection = (section: 'chats' | 'library' | 'explore') => {
     switch (section) {
       case 'library':
-        // Already on library
+        router.push('/(main)/(ai)/chatbot/library' as any);
         break;
       case 'explore':
-        router.push('/ai/explore');
+        // Already on explore
         break;
     }
   };
@@ -34,7 +34,7 @@ export default function LibraryRoute() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LibraryScreen />
+      <ExploreScreen />
     </SafeAreaView>
   );
 }
