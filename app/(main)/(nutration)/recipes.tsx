@@ -1,12 +1,7 @@
-import { View, Text } from "react-native";
-
+import { RecipesScreen } from "../../../features/nutration/recipes";
 
 const Recipes = () => {
-    return (
-        <View>
-            <Text>Recipes</Text>
-        </View>
-    )
+    return <RecipesScreen />;
 }
 
 export default Recipes;
