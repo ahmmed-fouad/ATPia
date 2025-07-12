@@ -25,6 +25,8 @@ export const RecipeModal: React.FC<RecipeModalProps> = ({
 }) => {
   const { getNutritionData, getIngredients } = useRecipes();
   const [imgUri, setImgUri] = useState(recipe?.strMealThumb || FALLBACK_IMAGE);
+  const hasImage = !!recipe?.strMealThumb && recipe?.strMealThumb !== '' && recipe?.strMealThumb !== FALLBACK_IMAGE;
+  const [imgError, setImgError] = useState(false);
 
   if (!recipe) return null;
 
@@ -42,8 +44,8 @@ export const RecipeModal: React.FC<RecipeModalProps> = ({
       <View style={styles.overlay}>
         <View style={styles.modalCard}>
           {/* Header */}
-          <View style={styles.headerRow}>
-            <Text style={styles.headerTitle}>Recipe Details</Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>🍽️ {recipe.strMeal}</Text>
             <TouchableOpacity
               onPress={onClose}
               style={styles.closeBtn}
@@ -51,34 +53,36 @@ export const RecipeModal: React.FC<RecipeModalProps> = ({
               <Text style={styles.closeText}>×</Text>
             </TouchableOpacity>
           </View>
+          <Text style={styles.subtitle}>{recipe.strCategory} | {recipe.strArea}</Text>
 
-          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
-            {/* Recipe Image and Nutrition Chart */}
+          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+            {/* Image and Chart */}
             <View style={styles.topRow}>
-              <Image
-                source={{ uri: imgUri }}
-                style={styles.image}
-                resizeMode="cover"
-                onError={() => setImgUri(FALLBACK_IMAGE)}
-              />
+              {recipe && hasImage && !imgError ? (
+                <Image
+                  source={{ uri: recipe.strMealThumb! }}
+                  style={styles.image}
+                  resizeMode="cover"
+                  onError={() => setImgError(true)}
+                  accessibilityLabel={recipe.strMeal}
+                />
+              ) : (
+                <View style={[styles.image, styles.fallbackImage]}>
+                  <Text style={styles.fallbackText}>No Image</Text>
+                </View>
+              )}
               <View style={styles.chartCol}>
                 <NutritionChart data={nutritionData} size={110} />
               </View>
             </View>
 
-            {/* Recipe Title */}
-            <Text style={styles.title}>{recipe.strMeal}</Text>
-
-            {/* Category and Area */}
-            <Text style={styles.categoryText}>
-              {recipe.strCategory} | {recipe.strArea}
-            </Text>
-
             {/* Ingredients */}
-            <View style={styles.section}>
+            <View style={styles.sectionCard}>
               <Text style={styles.sectionHeader}>Ingredients</Text>
               <View style={styles.ingredientsBox}>
-                {ingredients.map((item, index) => (
+                {ingredients.length === 0 ? (
+                  <Text style={styles.emptyText}>No ingredients listed for this recipe.</Text>
+                ) : ingredients.map((item, index) => (
                   <View key={index} style={styles.ingredientRow}>
                     <View style={styles.ingredientDot} />
                     <Text style={styles.ingredientText}>{item.ingredient}</Text>
@@ -91,16 +95,20 @@ export const RecipeModal: React.FC<RecipeModalProps> = ({
             </View>
 
             {/* Instructions */}
-            <View style={styles.section}>
+            <View style={styles.sectionCard}>
               <Text style={styles.sectionHeader}>Instructions</Text>
               <View style={styles.instructionsBox}>
-                <Text style={styles.instructionsText}>{recipe.strInstructions}</Text>
+                {recipe.strInstructions ? (
+                  <Text style={styles.instructionsText}>{recipe.strInstructions}</Text>
+                ) : (
+                  <Text style={styles.emptyText}>No instructions provided for this recipe.</Text>
+                )}
               </View>
             </View>
 
             {/* Tags */}
             {recipe.strTags && (
-              <View style={styles.section}>
+              <View style={styles.sectionCard}>
                 <Text style={styles.sectionHeader}>Tags</Text>
                 <View style={styles.tagsRow}>
                   {recipe.strTags.split(',').map((tag, index) => (
@@ -119,7 +127,7 @@ export const RecipeModal: React.FC<RecipeModalProps> = ({
 
             {/* YouTube Link */}
             {recipe.strYoutube && (
-              <View style={styles.section}>
+              <View style={styles.sectionCard}>
                 <Text style={styles.sectionHeader}>Video Tutorial</Text>
                 <TouchableOpacity
                   style={styles.youtubeBtn}
@@ -149,6 +157,7 @@ const styles = StyleSheet.create({
     padding: 0,
     width: width - 24,
     maxHeight: height * 0.92,
+    minHeight: height * 0.5,
     shadowColor: '#a7f3d0',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
@@ -156,20 +165,35 @@ const styles = StyleSheet.create({
     elevation: 5,
     overflow: 'hidden',
   },
-  headerRow: {
+  scrollContent: {
+    paddingBottom: 24,
+    flexGrow: 1,
+  },
+  headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 18,
     paddingTop: 18,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e7ef',
+    paddingBottom: 0,
+    borderBottomWidth: 0,
   },
-  headerTitle: {
-    fontSize: 18,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#059669',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    flex: 1,
+    marginRight: 8,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#64748b',
+    textAlign: 'center',
+    fontWeight: '500',
+    marginBottom: 8,
+    marginTop: 2,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
   },
   closeBtn: {
     width: 32,
@@ -195,40 +219,53 @@ const styles = StyleSheet.create({
   image: {
     width: 110,
     height: 110,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: '#e5e7eb',
     marginRight: 10,
+    borderWidth: 2,
+    borderColor: '#34d399',
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.10 : 0.13,
+    shadowRadius: 6,
+    elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fallbackImage: {
+    backgroundColor: '#f3f4f6',
+    borderStyle: 'dashed',
+    borderColor: '#a7f3d0',
+    borderWidth: 2,
+  },
+  fallbackText: {
+    color: '#64748b',
+    fontSize: 14,
+    fontStyle: 'italic',
   },
   chartCol: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#222',
-    textAlign: 'center',
-    marginTop: 12,
-    marginBottom: 2,
-    paddingHorizontal: 18,
-  },
-  categoryText: {
-    fontSize: 13,
-    color: '#64748b',
-    textAlign: 'center',
-    fontWeight: '500',
-    marginBottom: 8,
-  },
-  section: {
-    marginTop: 10,
-    paddingHorizontal: 18,
+  sectionCard: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: 14,
+    padding: 14,
+    marginHorizontal: 16,
+    marginTop: 14,
+    shadowColor: '#a7f3d0',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: Platform.OS === 'ios' ? 0.08 : 0.10,
+    shadowRadius: 6,
+    elevation: 2,
   },
   sectionHeader: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#059669',
     marginBottom: 6,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
   },
   ingredientsBox: {
     backgroundColor: '#f3f4f6',
@@ -266,6 +303,13 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: 14,
     lineHeight: 20,
+  },
+  emptyText: {
+    color: '#64748b',
+    fontSize: 15,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginVertical: 8,
   },
   tagsRow: {
     flexDirection: 'row',

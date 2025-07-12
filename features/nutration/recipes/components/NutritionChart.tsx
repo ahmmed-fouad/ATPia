@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, Dimensions } from 'react-native';
-import Svg, { Circle, G, Text as SvgText } from 'react-native-svg';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import Svg, { G, Path, Circle } from 'react-native-svg';
 import { NutritionData } from '../types';
 
 interface NutritionChartProps {
@@ -8,90 +8,111 @@ interface NutritionChartProps {
   size?: number;
 }
 
+const COLORS = ['#059669', '#60a5fa', '#fbbf24', '#f87171'];
 const { width } = Dimensions.get('window');
-const CHART_SIZE = Math.min(width * 0.4, 150);
+const CHART_SIZE = Math.min(width * 0.5, 140);
+const STROKE_WIDTH = 18;
 
-export const NutritionChart: React.FC<NutritionChartProps> = ({ 
-  data, 
-  size = CHART_SIZE 
-}) => {
-  const radius = size / 2;
+function describeArc(cx: number, cy: number, r: number, startAngle: number, endAngle: number) {
+  const start = polarToCartesian(cx, cy, r, endAngle);
+  const end = polarToCartesian(cx, cy, r, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+  const d = [
+    'M', start.x, start.y,
+    'A', r, r, 0, largeArcFlag, 0, end.x, end.y
+  ].join(' ');
+  return d;
+}
+
+function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
+  const rad = (angle - 90) * Math.PI / 180.0;
+  return {
+    x: cx + r * Math.cos(rad),
+    y: cy + r * Math.sin(rad)
+  };
+}
+
+export const NutritionChart: React.FC<NutritionChartProps> = ({ data, size = CHART_SIZE }) => {
+  const radius = (size - STROKE_WIDTH) / 2;
   const center = size / 2;
-  
-  // Calculate total for percentages
   const total = data.reduce((sum, item) => sum + item.value, 0);
-  
-  // Generate pie chart segments
-  const segments = data.map((item, index) => {
-    const percentage = item.value / total;
-    const angle = percentage * 2 * Math.PI;
-    const startAngle = data
-      .slice(0, index)
-      .reduce((sum, d) => sum + (d.value / total) * 2 * Math.PI, 0);
-    
-    const x1 = center + radius * Math.cos(startAngle);
-    const y1 = center + radius * Math.sin(startAngle);
-    const x2 = center + radius * Math.cos(startAngle + angle);
-    const y2 = center + radius * Math.sin(startAngle + angle);
-    
-    const largeArcFlag = angle > Math.PI ? 1 : 0;
-    
-    const path = [
-      `M ${center} ${center}`,
-      `L ${x1} ${y1}`,
-      `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-      'Z'
-    ].join(' ');
-    
-    return {
-      path,
-      color: item.color,
-      percentage: Math.round(percentage * 100),
-      name: item.name,
-      value: item.value
-    };
+
+  let startAngle = 0;
+  const arcs = data.map((item, i) => {
+    const value = item.value;
+    const angle = (value / total) * 360;
+    const endAngle = startAngle + angle;
+    const path = describeArc(center, center, radius, startAngle, endAngle);
+    const arc = (
+      <Path
+        key={i}
+        d={path}
+        stroke={COLORS[i % COLORS.length]}
+        strokeWidth={STROKE_WIDTH}
+        fill="none"
+        strokeLinecap="round"
+      />
+    );
+    startAngle = endAngle;
+    return arc;
   });
 
   return (
-    <View className="items-center">
+    <View style={styles.container}>
       <Svg width={size} height={size}>
         <G>
-          {segments.map((segment, index) => (
-            <Circle
-              key={index}
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="none"
-              stroke={segment.color}
-              strokeWidth={radius * 0.6}
-              strokeDasharray={`${(segment.percentage / 100) * 2 * Math.PI * radius} ${2 * Math.PI * radius}`}
-              strokeDashoffset={-index * (2 * Math.PI * radius) / segments.length}
-              transform={`rotate(-90 ${center} ${center})`}
-            />
-          ))}
+          {arcs}
+          {/* Donut hole */}
+          <Circle cx={center} cy={center} r={radius - STROKE_WIDTH / 2} fill="#fff" />
         </G>
       </Svg>
-      
-      {/* Legend */}
-      <View className="mt-4 w-full">
-        {segments.map((segment, index) => (
-          <View key={index} className="flex-row items-center justify-between mb-2">
-            <View className="flex-row items-center">
-              <View 
-                className="w-3 h-3 rounded-full mr-2"
-                style={{ backgroundColor: segment.color }}
-              />
-              <Text className="text-xs text-gray-600 dark:text-gray-300">
-                {segment.name}
-              </Text>
-            </View>
-            <Text className="text-xs font-semibold text-gray-800 dark:text-gray-200">
-              {segment.percentage}%
-            </Text>
+      <View style={styles.legendRow}>
+        {data.map((item, i) => (
+          <View key={i} style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: COLORS[i % COLORS.length] }]} />
+            <Text style={styles.legendLabel}>{item.name}</Text>
+            <Text style={styles.legendValue}>{item.value}%</Text>
           </View>
         ))}
       </View>
     </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  legendRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 8,
+    gap: 8,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 6,
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 4,
+  },
+  legendLabel: {
+    fontSize: 12,
+    color: '#64748b',
+    marginRight: 2,
+  },
+  legendValue: {
+    fontSize: 12,
+    color: '#222',
+    fontWeight: 'bold',
+    marginLeft: 2,
+  },
+}); 
