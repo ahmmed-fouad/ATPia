@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { ExploreScreen } from '../../../../features/ai/screens/explore-screen';
+import { ExploreScreen } from '../../../../features/ai/chatbot/screens/explore-screen';
 
 export default function ExploreRoute() {
   const router = useRouter();

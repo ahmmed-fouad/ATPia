@@ -13,6 +13,7 @@ import {
   BarChart3,
   Star,
   MessageSquare,
+  ForkKnife,
   
 } from "lucide-react-native";
 
@@ -23,7 +24,7 @@ export type TabItem = {
 };
 
 export type NutritionFeatures = {
-  id: "food-scanner" | "diet-calculator" | "meal-plans" | "grocery-list";
+  id: "diet-calculator" | "meal-plans" | "recipes" | "grocery-list";
   label: string;
   icon: React.ComponentType<{ size: number; color: string }>;
 };
@@ -48,9 +49,9 @@ export const tabItems: TabItem[] = [
 ];
 
 export const nutritionFeatures: NutritionFeatures[] = [
-  { id: "food-scanner", label: "Food Scanner", icon: Camera },
   { id: "diet-calculator", label: "Diet Calculator", icon: Calculator },
   { id: "meal-plans", label: "Meal Plans", icon: BookOpen },
+  { id: "recipes", label: "Recipes", icon: ForkKnife },
   { id: "grocery-list", label: "Grocery List", icon: ShoppingCart },
 ];
 

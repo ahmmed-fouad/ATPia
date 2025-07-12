@@ -10,24 +10,24 @@ export const useChatNavigation = () => {
   const navigateToChat = (chatId: string) => {
     setCurrentChat(chatId);
     setCurrentRoute('ai/chat/[chatId]' as const);
-    router.push(`/ai/chat/${chatId}`);
+    router.push(`/ai/chat/${chatId}` as any);
   };
 
   const navigateToNewChat = () => {
     const newChatId = `chat_${Date.now()}`;
     setCurrentChat(newChatId);
     setCurrentRoute('ai/chat/[chatId]' as const);
-    router.push(`/ai/chat/${newChatId}`);
+    router.push(`/ai/chat/${newChatId}` as any);
   };
 
   const navigateToLibrary = () => {
     setCurrentRoute('ai/library' as const);
-    router.push('/ai/library');
+    router.push('/ai/library' as any);
   };
 
   const navigateToExplore = () => {
     setCurrentRoute('ai/explore' as const);
-    router.push('/ai/explore');
+    router.push('/ai/explore' as any);
   };
 
   const goBack = () => {

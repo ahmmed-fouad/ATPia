@@ -1,4 +1,4 @@
-import { ChatScreen } from '@/features/ai/screens/chat-screen';
+import { ChatScreen } from '@/features/ai/chatbot/screens/chat-screen';
 import { useLocalSearchParams } from 'expo-router';
 
 const ChatRoute = () => {

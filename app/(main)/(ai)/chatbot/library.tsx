@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { LibraryScreen } from '../../../../features/ai/screens/library-screen';
+import { LibraryScreen } from '../../../../features/ai/chatbot/screens/library-screen';
 
 export default function LibraryRoute() {
   const router = useRouter();

@@ -1,8 +1,8 @@
 import { CustomBar } from "@/components";
 import { images } from "@/constans";
-import { ChatDrawer } from "@/features/ai/components/drawer/ChatDrawer";
-import { ChatService } from "@/features/ai/services/chatService";
-import { useChatStore } from "@/features/ai/stores/chatStore";
+import { ChatDrawer } from "@/features/ai/chatbot/components/drawer/ChatDrawer";
+import { ChatService } from "@/features/ai/chatbot/services/chatService";
+import { useChatStore } from "@/features/ai/chatbot/stores/chatStore";
 import { SettingsDropdown } from "@/features/settings/components";
 import { useSettingsDropdown } from "@/features/settings/hooks";
 import { tabItems } from "@/shared/data/tabItems";
@@ -61,7 +61,7 @@ const MainLayout = () => {
   const tabRoutes = {
     ai: "/(main)/(ai)/chatbot",
     tracking: "/(main)/(tracking)/tracker",
-    nutrition: "/(main)/(nutration)/food-scanner",
+    nutrition: "/(main)/(nutration)/diet-calculator",
     social: "/(main)/(social)/forum",
     home: "/(main)/home",
   } as const;
@@ -70,7 +70,7 @@ const MainLayout = () => {
   const pathToTab = {
     "/ai": "ai",
     "/tracking": "tracking",
-    "/nutration": "nutrition",
+    "/nutration": "diet-calculator",
     "/social": "social",
     "/home": "home",
   } as const;
@@ -83,7 +83,7 @@ const MainLayout = () => {
       "/tracker": "tracking",
       "/habits": "tracking",
       "/analytics": "tracking",
-      "/food-scanner": "nutrition",
+      "/recipes": "nutrition",
       "/diet-calculator": "nutrition",
       "/meal-plans": "nutrition",
       "/grocery-list": "nutrition",

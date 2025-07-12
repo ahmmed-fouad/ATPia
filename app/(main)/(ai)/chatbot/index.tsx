@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { ChatScreen } from '../../../../features/ai/screens/chat-screen';
-import { ChatService } from '../../../../features/ai/services/chatService';
-import { useChatStore } from '../../../../features/ai/stores/chatStore';
+import { ChatScreen } from '../../../../features/ai/chatbot/screens/chat-screen';
+import { ChatService } from '../../../../features/ai/chatbot/services/chatService';
+import { useChatStore } from '../../../../features/ai/chatbot/stores/chatStore';
 
 const { width } = Dimensions.get('window');
 

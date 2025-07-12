@@ -1,8 +1,8 @@
 import { Slot, useRouter } from 'expo-router';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useChatStore } from '@/features/ai/stores/chatStore';
-import { useDrawer } from '@/features/ai/hooks/useDrawer';
+import { useChatStore } from '@/features/ai/chatbot/stores/chatStore';
+import { useDrawer } from '@/features/ai/chatbot/hooks/useDrawer';
 
 export default function AILayout() {
   const router = useRouter();

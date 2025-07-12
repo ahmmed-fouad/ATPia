@@ -1,4 +1,4 @@
-import { FoodScannerScreen } from "../../../../features/nutration/food-scanner/screens/FoodScannerScreen";
+import { FoodScannerScreen } from "../../../../features/ai/food-scanner/screens/FoodScannerScreen";
 
 const FoodScanner = () => {
   return <FoodScannerScreen />;
