@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
+import { useRouter, usePathname } from 'expo-router';
 import {
   Bot,
   MessageCircle,
@@ -49,8 +50,8 @@ const categories = [
     label: 'AI',
     icon: <Bot size={25} color="#6366f1" />,
     items: [
-      { key: 'chatbot', label: 'AI Chatbot', icon: <MessageCircle size={22} color="#6366f1" /> },
-      { key: 'foodscanner', label: 'Food Scanner', icon: <ScanBarcode size={22} color="#6366f1" /> },
+      { key: 'chatbot', label: 'AI Chatbot', icon: <MessageCircle size={22} color="#6366f1" />, route: '/(main)/(ai)/chatbot' },
+      { key: 'foodscanner', label: 'Food Scanner', icon: <ScanBarcode size={22} color="#6366f1" />, route: '/(main)/(ai)/food-scanner/food-scanner' },
     ],
   },
   {
@@ -58,10 +59,10 @@ const categories = [
     label: 'Tracking',
     icon: <Activity size={25} color="#06b6d4" />,
     items: [
-      { key: 'progress', label: 'Progress', icon: <TrendingUp size={22} color="#06b6d4" /> },
-      { key: 'habits', label: 'Habits', icon: <Repeat size={22} color="#06b6d4" /> },
-      { key: 'form', label: 'Form', icon: <ClipboardList size={22} color="#06b6d4" /> },
-      { key: 'analytics', label: 'Analytics', icon: <BarChart2 size={22} color="#06b6d4" /> },
+      { key: 'progress', label: 'Progress', icon: <TrendingUp size={22} color="#06b6d4" />, route: '/(main)/(tracking)/tracker' },
+      { key: 'habits', label: 'Habits', icon: <Repeat size={22} color="#06b6d4" />, route: '/(main)/(tracking)/habits' },
+      { key: 'form', label: 'Form', icon: <ClipboardList size={22} color="#06b6d4" />, route: '/(main)/(tracking)/form' },
+      { key: 'analytics', label: 'Analytics', icon: <BarChart2 size={22} color="#06b6d4" />, route: '/(main)/(tracking)/analytics' },
     ],
   },
   {
@@ -69,10 +70,10 @@ const categories = [
     label: 'Nutrition',
     icon: <Utensils size={25} color="#f59e42" />,
     items: [
-      { key: 'calculator', label: 'Calculator', icon: <Calculator size={22} color="#f59e42" /> },
-      { key: 'mealplans', label: 'Meal Plans', icon: <BookOpen size={22} color="#f59e42" /> },
-      { key: 'recipes', label: 'Recipes', icon: <BookOpen size={22} color="#f59e42" /> },
-      { key: 'grocerylist', label: 'Grocery List', icon: <ShoppingCart size={22} color="#f59e42" /> },
+      { key: 'calculator', label: 'Calculator', icon: <Calculator size={22} color="#f59e42" />, route: '/(main)/(nutration)/diet-calculator' },
+      { key: 'mealplans', label: 'Meal Plans', icon: <BookOpen size={22} color="#f59e42" />, route: '/(main)/(nutration)/meal-plans' },
+      { key: 'recipes', label: 'Recipes', icon: <BookOpen size={22} color="#f59e42" />, route: '/(main)/(nutration)/recipes' },
+      { key: 'grocerylist', label: 'Grocery List', icon: <ShoppingCart size={22} color="#f59e42" />, route: '/(main)/(nutration)/grocery-list' },
     ],
   },
   {
@@ -80,17 +81,27 @@ const categories = [
     label: 'Social',
     icon: <Users size={25} color="#10b981" />,
     items: [
-      { key: 'forum', label: 'Forum', icon: <MessageSquare size={22} color="#10b981" /> },
-      { key: 'blog', label: 'Blog', icon: <MessageCircleMore size={22} color="#10b981" /> },
-      { key: 'testimonials', label: 'Testimonials', icon: <Star size={22} color="#10b981" /> },
-      { key: 'chat', label: 'Chat', icon: <MessageCircle size={22} color="#10b981" /> },
+      { key: 'forum', label: 'Forum', icon: <MessageSquare size={22} color="#10b981" />, route: '/(main)/(social)/forum' },
+      { key: 'blog', label: 'Blog', icon: <MessageCircleMore size={22} color="#10b981" />, route: '/(main)/(social)/blog' },
+      { key: 'testimonials', label: 'Testimonials', icon: <Star size={22} color="#10b981" />, route: '/(main)/(social)/testimonials' },
+      { key: 'chat', label: 'Chat', icon: <MessageCircle size={22} color="#10b981" />, route: '/(main)/(social)/chat' },
     ],
   },
 ];
 
 const MenuDropdown: React.FC<MenuDropdownProps> = ({ isVisible, onClose }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [animation] = useState(new Animated.Value(0));
   const [scaleAnimation] = useState(new Animated.Value(0.95));
+
+  const handleNavigation = (route: any) => {
+    onClose();
+    router.push(route);
+  };
+
+  // Only highlight the item whose route matches the current pathname (partial match for nested routes)
+  const isActiveItem = (route: string) => pathname.startsWith(route);
 
   useEffect(() => {
     if (isVisible) {
@@ -160,12 +171,33 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isVisible, onClose }) => {
                 <Text style={styles.categoryLabel}>{cat.label}</Text>
               </View>
               <View style={styles.subItemsList}>
-                {cat.items.map((item) => (
-                  <TouchableOpacity key={item.key} style={styles.subItem} activeOpacity={0.7}>
-                    <View style={styles.subItemIconCircle}>{item.icon}</View>
-                    <Text style={styles.subItemLabel}>{item.label}</Text>
-                  </TouchableOpacity>
-                ))}
+                {cat.items.map((item) => {
+                  const isActive = isActiveItem(item.route);
+                  return (
+                    <TouchableOpacity 
+                      key={item.key} 
+                      style={[
+                        styles.subItem,
+                        isActive && styles.activeSubItem
+                      ]} 
+                      activeOpacity={0.7}
+                      onPress={() => handleNavigation(item.route)}
+                    >
+                      <View style={[
+                        styles.subItemIconCircle,
+                        isActive && styles.activeSubItemIconCircle
+                      ]}>
+                        {item.icon}
+                      </View>
+                      <Text style={[
+                        styles.subItemLabel,
+                        isActive && styles.activeSubItemLabel
+                      ]}>
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
               {idx !== categories.length - 1 && <View style={styles.divider} />}
             </View>
@@ -201,14 +233,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   header: {
-    paddingVertical: 1,
+    paddingVertical: 3,
     paddingHorizontal: 12,
     backgroundColor: "#f1f5f9",
     borderTopLeftRadius: 0,
     borderTopRightRadius: 18,
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
-    marginBottom: 2,
+    marginBottom: 6,
   },
   headerText: {
     fontSize: 14,
@@ -261,6 +293,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#64748b",
     fontWeight: "600",
+  },
+  activeSubItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    borderRadius: 12,
+    backgroundColor: "#f8fafc",
+    borderBottomWidth: 2,
+    borderBottomColor: "#6366f1",
+    marginBottom: 4,
+  },
+  activeSubItemIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#e0e7ff",
+  },
+  activeSubItemLabel: {
+    fontSize: 16,
+    color: "#334155",
+    fontWeight: "700",
   },
   divider: {
     height: 1,

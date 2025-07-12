@@ -1,35 +1,42 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Alert } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { HeroSection } from '../components/HeroSection';
 import { CategorySection } from '../components/CategorySection';
 import { CategorySectionData, FeatureCardData } from '../types';
 
+const router = useRouter();
+
 const aiFeatures: FeatureCardData[] = [
   {
-    id: 'chatbot',
-    title: 'AI Chatbot',
-    description: '• Get personalized health advice from your AI coach 24/7\n• Ask questions about nutrition, exercise, and wellness\n• Receive motivation and goal-setting guidance\n• Track your progress with intelligent insights\n• Get instant answers to health-related queries',
-    icon: '🤖',
-    color: '#059669',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80',
+    id: "chatbot",
+    title: "AI Chatbot",
+    description:
+      "• Get personalized health advice from your AI coach 24/7\n• Ask questions about nutrition, exercise, and wellness\n• Receive motivation and goal-setting guidance\n• Track your progress with intelligent insights\n• Get instant answers to health-related queries",
+    icon: "🤖",
+    color: "#059669",
+    image:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
     chartData: [8, 12, 15, 18, 22, 25, 28],
-    chartTitle: 'Daily Conversations',
-    stat: { label: 'Chats', value: 124, type: 'progress' },
-    actionLabel: 'Start Chat',
-    onPress: () => Alert.alert('Navigate', 'Go to AI Chatbot'),
+    chartTitle: "Daily Conversations",
+    stat: { label: "Chats", value: 124, type: "progress" },
+    actionLabel: "Start Chat",
+    onPress: () => router.push("/(main)/(ai)/chatbot"),
   },
   {
-    id: 'food-scanner',
-    title: 'Food Scanner',
-    description: '• Point your camera at any food to get instant nutrition facts\n• Identify ingredients and allergens automatically\n• Track calories, macros, and micronutrients\n• Build a personal food database\n• Get meal suggestions based on your goals',
-    icon: '📷',
-    color: '#60a5fa',
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80',
+    id: "food-scanner",
+    title: "Food Scanner",
+    description:
+      "• Point your camera at any food to get instant nutrition facts\n• Identify ingredients and allergens automatically\n• Track calories, macros, and micronutrients\n• Build a personal food database\n• Get meal suggestions based on your goals",
+    icon: "📷",
+    color: "#60a5fa",
+    image:
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
     chartData: [5, 8, 12, 15, 18, 22, 25],
-    chartTitle: 'Foods Scanned',
-    stat: { label: 'Scans', value: 42, type: 'progress' },
-    actionLabel: 'Scan Food',
-    onPress: () => Alert.alert('Navigate', 'Go to Food Scanner'),
+    chartTitle: "Foods Scanned",
+    stat: { label: "Scans", value: 42, type: "progress" },
+    actionLabel: "Scan Food",
+    onPress: () => router.push("/(main)/(ai)/food-scanner/food-scanner"),
   },
 ];
 
@@ -44,7 +51,7 @@ const nutritionFeatures: FeatureCardData[] = [
     chartData: [1800, 1850, 1900, 1950, 2000, 2050, 2100],
     chartTitle: 'Daily Calories',
     actionLabel: 'Calculate',
-    onPress: () => Alert.alert('Navigate', 'Go to Diet Calculator'),
+    onPress: () => router.push('/(main)/(nutration)/diet-calculator'),
   },
   {
     id: 'recipes',
@@ -56,7 +63,7 @@ const nutritionFeatures: FeatureCardData[] = [
     chartData: [3, 5, 7, 4, 6, 8, 5],
     chartTitle: 'Recipes Tried',
     actionLabel: 'Browse Recipes',
-    onPress: () => Alert.alert('Navigate', 'Go to Recipes'),
+    onPress: () => router.push('/(main)/(nutration)/recipes'),
   },
   {
     id: 'grocery-list',
@@ -68,7 +75,7 @@ const nutritionFeatures: FeatureCardData[] = [
     chartData: [12, 15, 18, 14, 16, 20, 17],
     chartTitle: 'Items Purchased',
     actionLabel: 'View List',
-    onPress: () => Alert.alert('Navigate', 'Go to Grocery List'),
+    onPress: () => router.push('/(main)/(nutration)/grocery-list'),
   },
   {
     id: 'meal-plans',
@@ -80,47 +87,53 @@ const nutritionFeatures: FeatureCardData[] = [
     chartData: [85, 90, 88, 92, 87, 95, 89],
     chartTitle: 'Plan Adherence %',
     actionLabel: 'See Plans',
-    onPress: () => Alert.alert('Navigate', 'Go to Meal Plans'),
+    onPress: () => router.push('/(main)/(nutration)/meal-plans'),
   },
 ];
 
 const trackingFeatures: FeatureCardData[] = [
   {
-    id: 'progress',
-    title: 'Progress',
-    description: '• Track daily calorie intake and macronutrient balance\n• Monitor weight changes and body composition over time\n• Set and achieve fitness goals with visual progress charts\n• Celebrate milestones and maintain motivation streaks\n• Get insights on what works best for your body',
-    icon: '📈',
-    color: '#fbbf24',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80',
+    id: "progress",
+    title: "Progress",
+    description:
+      "• Track daily calorie intake and macronutrient balance\n• Monitor weight changes and body composition over time\n• Set and achieve fitness goals with visual progress charts\n• Celebrate milestones and maintain motivation streaks\n• Get insights on what works best for your body",
+    icon: "📈",
+    color: "#fbbf24",
+    image:
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80",
     chartData: [75, 78, 82, 85, 88, 90, 92],
-    chartTitle: 'Goal Progress %',
-    stat: { label: 'Streak', value: 7, unit: ' days', type: 'streak' },
-    actionLabel: 'View Progress',
-    onPress: () => Alert.alert('Navigate', 'Go to Progress'),
+    chartTitle: "Goal Progress %",
+    stat: { label: "Streak", value: 7, unit: " days", type: "streak" },
+    actionLabel: "View Progress",
+    onPress: () => router.push("/(main)/(tracking)/tracker"),
   },
   {
-    id: 'habits',
-    title: 'Habits',
-    description: '• Build sustainable healthy habits with daily reminders\n• Track consistency and build momentum over time\n• Create custom habit categories: nutrition, exercise, sleep\n• Get streak counters and habit completion statistics\n• Receive positive reinforcement and habit-building tips',
-    icon: '✅',
-    color: '#059669',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80',
+    id: "habits",
+    title: "Habits",
+    description:
+      "• Build sustainable healthy habits with daily reminders\n• Track consistency and build momentum over time\n• Create custom habit categories: nutrition, exercise, sleep\n• Get streak counters and habit completion statistics\n• Receive positive reinforcement and habit-building tips",
+    icon: "✅",
+    color: "#059669",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80",
     chartData: [4, 5, 6, 7, 8, 9, 10],
-    chartTitle: 'Habits Completed',
-    actionLabel: 'Track Habits',
-    onPress: () => Alert.alert('Navigate', 'Go to Habits'),
+    chartTitle: "Habits Completed",
+    actionLabel: "Track Habits",
+    onPress: () => router.push("/(main)/(tracking)/habits"),
   },
   {
-    id: 'analytics',
-    title: 'Analytics',
-    description: '• Visualize your health data with interactive charts and graphs\n• Analyze trends in nutrition, exercise, and wellness metrics\n• Compare performance across different time periods\n• Identify patterns and correlations in your health journey\n• Export data for sharing with healthcare professionals',
-    icon: '📊',
-    color: '#60a5fa',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+    id: "analytics",
+    title: "Analytics",
+    description:
+      "• Visualize your health data with interactive charts and graphs\n• Analyze trends in nutrition, exercise, and wellness metrics\n• Compare performance across different time periods\n• Identify patterns and correlations in your health journey\n• Export data for sharing with healthcare professionals",
+    icon: "📊",
+    color: "#60a5fa",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
     chartData: [65, 72, 78, 85, 82, 88, 91],
-    chartTitle: 'Health Score',
-    actionLabel: 'View Analytics',
-    onPress: () => Alert.alert('Navigate', 'Go to Analytics'),
+    chartTitle: "Health Score",
+    actionLabel: "View Analytics",
+    onPress: () => router.push("/(main)/(tracking)/analytics"),
   },
 ];
 
@@ -135,7 +148,7 @@ const socialFeatures: FeatureCardData[] = [
     chartData: [15, 22, 18, 25, 20, 28, 24],
     chartTitle: 'Active Discussions',
     actionLabel: 'Go to Forum',
-    onPress: () => Alert.alert('Navigate', 'Go to Forum'),
+    onPress: () => router.push('/(main)/(social)/forum'),
   },
   {
     id: 'blog',
@@ -147,7 +160,7 @@ const socialFeatures: FeatureCardData[] = [
     chartData: [2, 3, 1, 4, 2, 3, 2],
     chartTitle: 'Articles Read',
     actionLabel: 'Read Blog',
-    onPress: () => Alert.alert('Navigate', 'Go to Blog'),
+    onPress: () => router.push('/(main)/(social)/blog'),
   },
   {
     id: 'testimonials',
@@ -159,7 +172,7 @@ const socialFeatures: FeatureCardData[] = [
     chartData: [5, 8, 6, 10, 7, 9, 8],
     chartTitle: 'Stories Shared',
     actionLabel: 'See Stories',
-    onPress: () => Alert.alert('Navigate', 'Go to Testimonials'),
+    onPress: () => router.push('/(main)/(social)/testimonials'),
   },
   {
     id: 'chat',
@@ -171,11 +184,13 @@ const socialFeatures: FeatureCardData[] = [
     chartData: [12, 18, 15, 22, 19, 25, 21],
     chartTitle: 'Messages Sent',
     actionLabel: 'Open Chat',
-    onPress: () => Alert.alert('Navigate', 'Go to Chat'),
+    onPress: () => router.push('/(main)/(social)/chat'),
   },
 ];
 
 export const HomeScreen: React.FC = () => {
+  const router = useRouter();
+  
   return (
     <ScrollView style={styles.bg} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <HeroSection />
