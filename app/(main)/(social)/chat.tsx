@@ -1,11 +1,5 @@
-import { View, Text } from 'react-native'
+import { ChatScreen } from '../../../features/social/chat';
 
-const Chat = () => {
-  return (
-    <View>
-      <Text>Chat</Text>
-    </View>
-  );
-};
-
-export default Chat;
+export default function Chat() {
+  return <ChatScreen />;
+}
