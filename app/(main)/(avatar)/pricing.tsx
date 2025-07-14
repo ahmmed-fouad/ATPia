@@ -1,10 +1,8 @@
-import { View, Text } from "react-native";
+import React from 'react';
+import PricingScreen from '@/features/avatar/pricing/screens/PricingScreen';
+
 const Pricing = () => {
-  return (
-    <View>
-      <Text>Pricing</Text>
-    </View>
-  );
+  return <PricingScreen />;
 };
 
 export default Pricing;
