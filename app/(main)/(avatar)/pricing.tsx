@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
-const Plans = () => {
+const Pricing = () => {
   return (
     <View>
-      <Text>Plans</Text>
+      <Text>Pricing</Text>
     </View>
   );
 };
 
-export default Plans;
+export default Pricing;

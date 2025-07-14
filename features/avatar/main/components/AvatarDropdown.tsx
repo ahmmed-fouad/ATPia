@@ -17,6 +17,7 @@ import {
   LogOut,
   UserPlus,
 } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 interface AvatarDropdownProps {
   isVisible: boolean;
@@ -39,32 +40,38 @@ const menuItems = [
     key: 'profile',
     label: 'Profile',
     icon: <User size={25} color="#6366f1" />,
+    route: '/(main)/(avatar)/profile',
   },
   {
     key: 'faq',
     label: 'FAQ',
     icon: <HelpCircle size={25} color="#06b6d4" />,
+    route: '/(main)/(avatar)/faq',
   },
   {
     key: 'plans',
     label: 'Plans & Pricing',
     icon: <CreditCard size={25} color="#f59e42" />,
+    route: '/(main)/(avatar)/pricing',
   },
   {
     key: 'admin',
     label: 'Admin',
     icon: <Shield size={25} color="#10b981" />,
+    route: '/(main)/(avatar)/admin',
   },
   {
     key: 'auth',
     label: 'Log in / Log out / Sign up',
     icon: <LogIn size={25} color="#64748b" />,
+    route: '/(auth)/login', // Change this to your actual auth route if needed
   },
 ];
 
 const AvatarDropdown: React.FC<AvatarDropdownProps> = ({ isVisible, onClose }) => {
   const [animation] = useState(new Animated.Value(0));
   const [scaleAnimation] = useState(new Animated.Value(0.95));
+  const router = useRouter();
 
   React.useEffect(() => {
     if (isVisible) {
@@ -135,6 +142,10 @@ const AvatarDropdown: React.FC<AvatarDropdownProps> = ({ isVisible, onClose }) =
                 idx === menuItems.length - 1 && { borderBottomWidth: 0 },
               ]}
               activeOpacity={0.7}
+              onPress={() => {
+                onClose();
+                if (item.route) router.push(item.route as any);
+              }}
             >
               <View style={styles.iconCircle}>{item.icon}</View>
               <Text style={styles.menuLabel}>{item.label}</Text>
@@ -152,8 +163,8 @@ const AvatarDropdown: React.FC<AvatarDropdownProps> = ({ isVisible, onClose }) =
 const styles = StyleSheet.create({
   dropdown: {
     position: 'absolute',
-    top: 80,
-    right: 8,
+    top: 60,
+    left: 8,
     minWidth: 260,
     backgroundColor: CARD_BG,
     borderRadius: 18,

@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 
-const Dashboard = () => {
+const Profile = () => {
   return (
     <View>
-      <Text>Dashboard</Text>
+      <Text>Profile</Text>
     </View>
   );
 };
 
-export default Dashboard;
+export default Profile;

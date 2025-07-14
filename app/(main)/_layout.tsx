@@ -152,31 +152,31 @@ const MainLayout = () => {
         className="flex-row items-center justify-between px-4 
         py-3 bg-white border-b border-gray-200"
       >
-        <View className="flex-row items-center">
-          <Image
-            source={images.ATPiaLogo}
-            className="w-10 h-10"
-            resizeMode="contain"
-          />
-          <Text className="text-gray-500 ml-2 text-xl font-bold">ATPia</Text>
-        </View>
-        <View className="flex-row items-center space-x-3 justify-between py-3 bg-white">
+        <View className="flex-row items-center space-x-3 justify-between bg-white">
           <View className="flex-row items-center">
             <TouchableOpacity
               onPress={toggleAvatarDropdown}
               activeOpacity={0.7}
               className="flex-row gap-2 items-center"
             >
-              <Text className="text-gray-500 ml-2 text-xl font-bold">
-                Ahmed
-              </Text>
               <Image
                 source={images.avatarr}
                 className="w-10 h-10"
                 resizeMode="contain"
               />
+              <Text className="text-gray-500 ml-2 text-xl font-bold">
+                Ahmed
+              </Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View className="flex-row items-center gap-2">
+          <Text className="text-gray-500 text-xl font-bold">ATPia</Text>
+          <Image
+            source={images.ATPiaLogo}
+            className="w-10 h-10"
+            resizeMode="contain"
+          />
         </View>
       </View>
 
