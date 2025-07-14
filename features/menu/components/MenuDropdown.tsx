@@ -27,6 +27,7 @@ import {
   Star,
   MessageCircleMore,
   Menu,
+  ChevronRight,
 } from 'lucide-react-native';
 
 interface MenuDropdownProps {
@@ -94,6 +95,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isVisible, onClose }) => {
   const pathname = usePathname();
   const [animation] = useState(new Animated.Value(0));
   const [scaleAnimation] = useState(new Animated.Value(0.95));
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   const handleNavigation = (route: any) => {
     onClose();
@@ -102,6 +104,10 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isVisible, onClose }) => {
 
   // Only highlight the item whose route matches the current pathname (partial match for nested routes)
   const isActiveItem = (route: string) => pathname.startsWith(route);
+
+  const handleCategoryPress = (key: string) => {
+    setExpandedCategory(expandedCategory === key ? null : key);
+  };
 
   useEffect(() => {
     if (isVisible) {
@@ -166,39 +172,53 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({ isVisible, onClose }) => {
           </View>
           {categories.map((cat, idx) => (
             <View key={cat.key} style={styles.categorySection}>
-              <View style={styles.categoryRow}>
+              <TouchableOpacity
+                style={styles.categoryRow}
+                onPress={() => handleCategoryPress(cat.key)}
+                activeOpacity={0.7}
+              >
                 <View style={[styles.categoryIconCircle, { backgroundColor: getCategoryBg(cat.key) }]}>{cat.icon}</View>
                 <Text style={styles.categoryLabel}>{cat.label}</Text>
-              </View>
-              <View style={styles.subItemsList}>
-                {cat.items.map((item) => {
-                  const isActive = isActiveItem(item.route);
-                  return (
-                    <TouchableOpacity 
-                      key={item.key} 
-                      style={[
-                        styles.subItem,
-                        isActive && styles.activeSubItem
-                      ]} 
-                      activeOpacity={0.7}
-                      onPress={() => handleNavigation(item.route)}
-                    >
-                      <View style={[
-                        styles.subItemIconCircle,
-                        isActive && styles.activeSubItemIconCircle
-                      ]}>
-                        {item.icon}
-                      </View>
-                      <Text style={[
-                        styles.subItemLabel,
-                        isActive && styles.activeSubItemLabel
-                      ]}>
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
+                <ChevronRight
+                  size={20}
+                  color="#64748b"
+                  style={{
+                    marginLeft: 'auto',
+                    transform: [{ rotate: expandedCategory === cat.key ? '90deg' : '0deg' }],
+                  }}
+                />
+              </TouchableOpacity>
+              {expandedCategory === cat.key && (
+                <View style={styles.subItemsList}>
+                  {cat.items.map((item) => {
+                    const isActive = isActiveItem(item.route);
+                    return (
+                      <TouchableOpacity 
+                        key={item.key} 
+                        style={[
+                          styles.subItem,
+                          isActive && styles.activeSubItem
+                        ]} 
+                        activeOpacity={0.7}
+                        onPress={() => handleNavigation(item.route)}
+                      >
+                        <View style={[
+                          styles.subItemIconCircle,
+                          isActive && styles.activeSubItemIconCircle
+                        ]}>
+                          {item.icon}
+                        </View>
+                        <Text style={[
+                          styles.subItemLabel,
+                          isActive && styles.activeSubItemLabel
+                        ]}>
+                          {item.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              )}
               {idx !== categories.length - 1 && <View style={styles.divider} />}
             </View>
           ))}
@@ -226,14 +246,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 135,
     left: 8,
-    minWidth: 250,
+    minWidth: 200,
     backgroundColor: CARD_BG,
     borderRadius: 16,
     borderTopLeftRadius: 0,
     overflow: "hidden",
   },
   header: {
-    paddingVertical: 3,
+    paddingVertical: 4,
     paddingHorizontal: 12,
     backgroundColor: "#f1f5f9",
     borderTopLeftRadius: 0,
@@ -255,6 +275,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 24,
+    paddingVertical: 4,
+    paddingBottom: 10,
   },
   categoryIconCircle: {
     width: 25,
@@ -318,7 +340,8 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "#f1f5f9",
     marginHorizontal: 24,
-    marginVertical: 4,
+    marginVertical: 6,
+    marginBottom: 10,
   },
   footer: {
     backgroundColor: "#f9fafb",
